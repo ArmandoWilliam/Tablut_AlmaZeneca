@@ -12,7 +12,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/Users/davidetazzioli/Downloads/TablutCompetition-master/Tablut/lib/gson-2.2.2.jar"/>
-	<classpathentry kind="lib" path="/Users/davidetazzioli/Downloads/TablutCompetition-master/Tablut/lib/commons-cli-1.4.jar"/>
+	<classpathentry kind="lib" path="/Users/davidetazzioli/eclipse-workspace/Tablut2019/lib/gson-2.2.2.jar"/>
+	<classpathentry kind="lib" path="/Users/davidetazzioli/eclipse-workspace/Tablut2019/lib/commons-cli-1.4.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

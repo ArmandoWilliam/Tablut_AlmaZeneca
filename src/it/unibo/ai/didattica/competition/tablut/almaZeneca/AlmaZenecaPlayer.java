@@ -9,24 +9,24 @@ import java.net.UnknownHostException;
 
 public class AlmaZenecaPlayer extends TablutClient {
 
-    private int game;
-    private boolean debug;
+    //private int game;
+    //private boolean debug;
 
-    public AlmaZenecaPlayer(String player, String name, int timeout, String ipAddress, int game, boolean debug) throws UnknownHostException, IOException {
+    public AlmaZenecaPlayer(String player, String name, int timeout, String ipAddress/*, int game, boolean debug*/) throws UnknownHostException, IOException {
         super(player, name, timeout, ipAddress);
-        this.game = game;
-        this.debug = debug;
+        //this.game = game;
+        //this.debug = debug;
     }
 
     public static void main(String[] args) throws IOException {
         
     	
-    	int gameType = 4;
+    	//int gameType = 4;
         String role = "";
         String name = "AlmaZeneca";
         String ipAddress = "localhost";
         int timeout = 60;
-        boolean debug = false;
+        //boolean debug = false;
 
         if (args.length < 1) {
             System.out.println("You must specify which player you are (WHITE or BLACK)");
@@ -64,16 +64,16 @@ public class AlmaZenecaPlayer extends TablutClient {
                 System.exit(-1);
             }
             ipAddress = args[2];
-            if(args[3].equals("debug")) {
+   /*         if(args[3].equals("debug")) {
                 debug = true;
             } else {
                 System.out.println("The last argument can be only 'debug' and it allow to print logs during search");
                 System.out.println("USAGE: ./runmyplayer <black|white> <timeout-in-seconds> <server-ip> <debug>");
                 System.exit(-1);
-            }
-        }
+            }	*/
+        }	
 
-        AlmaZenecaPlayer client = new AlmaZenecaPlayer(role, name, timeout, ipAddress, gameType, debug);
+        AlmaZenecaPlayer client = new AlmaZenecaPlayer(role, name, timeout, ipAddress/*, gameType, debug*/);
         client.run();
     }
 
@@ -103,17 +103,18 @@ public class AlmaZenecaPlayer extends TablutClient {
                "|    ██████╔╝██████╔╝███████║██║██╔██╗ ██║██╔████╔██║███████║   ██║   █████╗  ███████╗    |\n" +
                "|    ██╔══██╗██╔══██╗██╔══██║██║██║╚██╗██║██║╚██╔╝██║██╔══██║   ██║   ██╔══╝  ╚════██║    |\n" +
                "|    ██████╔╝██║  ██║██║  ██║██║██║ ╚████║██║ ╚═╝ ██║██║  ██║   ██║   ███████╗███████║    |\n" +
-               "|    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝    |");
+               "|    ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝╚═╝  ╚═══╝╚═╝     ╚═╝╚═╝  ╚═╝   ╚═╝   ╚══════╝╚══════╝    |\n" +
+               "|                           ma almazeneca è meglio!                                       |");
 
         System.out.println(
-               "+-------------  Made by Giuseppe Murro, Giuseppe Boezio, Salvatore Pisciotta  ------------+\n");
+               "+-------------  Made by   ------------+\n");
 
 
         // attributes depends to parameters passed to main
         System.out.println("Player: " + (this.getPlayer().equals(State.Turn.BLACK) ? "BLACK" : "WHITE" ));
         System.out.println("Timeout: " + this.timeout +" s");
         System.out.println("Server: " + this.serverIp);
-        System.out.println("Debug mode: " + this.debug+"\n");
+        //System.out.println("Debug mode: " + this.debug+"\n");
 
 
         // still alive until you are playing
@@ -231,7 +232,7 @@ public class AlmaZenecaPlayer extends TablutClient {
     private Action findBestMove(GameAshtonTablut tablutGame, State state) {
 
         MyIterativeDeepeningAlphaBetaSearch search = new MyIterativeDeepeningAlphaBetaSearch(tablutGame, Double.MIN_VALUE, Double.MAX_VALUE, this.timeout - 2 );
-        search.setLogEnabled(debug);
+        //search.setLogEnabled(debug);
         return search.makeDecision(state);
     }
 }

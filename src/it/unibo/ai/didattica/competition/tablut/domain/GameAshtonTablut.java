@@ -27,7 +27,6 @@ public class GameAshtonTablut implements Game {
 	 * Number of repeated states that can occur before a draw
 	 */
 	private int repeated_moves_allowed;
-
 	/**
 	 * Number of states kept in memory. negative value means infinite.
 	 */
@@ -43,6 +42,7 @@ public class GameAshtonTablut implements Game {
 	private List<String> citadels;
 	// private List<String> strangeCitadels;
 	private List<State> drawConditions;
+	
 
 	public GameAshtonTablut(int repeated_moves_allowed, int cache_size, String logs_folder, String whiteName,
 			String blackName) {
