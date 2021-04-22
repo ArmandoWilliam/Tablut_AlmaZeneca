@@ -85,6 +85,8 @@ public class TablutAlmaZenecaClient extends TablutClient {
 			if (this.getPlayer().equals(State.Turn.WHITE)) {
 				//if is my turn (white player)
 				if(state.getTurn().equals(State.Turn.WHITE)) {
+					System.out.println("\nSearching a suitable move... ");
+					
 					
 				}
 			}
