@@ -1,6 +1,7 @@
 package it.unibo.ai.didattica.competition.tablut.domain;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -748,6 +749,161 @@ public class GameAshtonTablut implements Game {
 	public void endGame(State state) {
 		this.loggGame.fine("Stato:\n"+state.toString());
 	}
+	
+	@Override 
+	public List<Action> getActions(State state){
+		State.Turn turn = state.getTurn();
+		
+		List<Action> possibleActions= new ArrayList<Action>();
+		
+		for (int i=0;i< state.getBoard().length;i++) {
+			for(int j=0; j< state.getBoard().length;j++) {
+				// if pawn color  is equal of turn color
+				if(state.getPawn(i,j).toString().equals(turn.toString())|| (state.getPawn(i, j).equals(State.Pawn.KING)&& turn.equals(State.Turn.WHITE))) {
+					// search on top of pawn
+					for( int k=i-1; k>=0;k--) {
+						// break if pawn is out of citadels and it is moving on a citadel
+						if(!citadels.contains(state.getBox(i, j))&& citadels.contains(state.getBox(k, j))) {
+							break;
+							
+						}
+						else if(state.getPawn(k, j).equalsPawn(State.Pawn.EMPTY.toString())) {
+							String from = state.getBox(i, j);
+							String to = state.getBox(k, j);
+							Action action=null;
+							try {
+								action = new Action (from, to, turn);
+								
+							}catch(IOException e) {
+								e.printStackTrace();
+							}
+							
+							// check if action is admissible and if it is, add it to list possibleActions
+							try {
+								isPossibleMove(state.clone(),action);
+								possibleActions.add(action);
+							}catch(Exception e) {
+								
+							}
+						} else {
+							// there is a pawn in the same column and it cannot be crossed
+							break;
+							}
+						}
+					// search on bottom of pawn
+					for (int k=i+1;k<state.getBoard().length;k++) {
+						
+						// break if pawn is out of citadels and it is moving on a citadel
+						
+					if(!citadels.contains(state.getBox(i, j)) && citadels.contains(state.getBox(k, j)) ) {
+					 break;
+					}
+					// check if we are moving on a empty cell
+					else if(state.getPawn(k, j).equalsPawn(State.Pawn.EMPTY.toString())) {
+						String from = state.getBox(i, j);
+						String to = state.getBox(k, j);
+						
+						Action action = null;
+						try {
+							action = new Action(from,to,turn);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+						
+						// check if action is admissible and if it is, add it to list possibleActions
+						try {
+							isPossibleMove(state.clone(),action);
+							possibleActions.add(action);
+						}catch(Exception e) {
+							
+						}
+					
+					}else {
+						// there is a pawn in the same column and it cannot be crossed
+						break;
+					}
+				}
+					
+					// search on left of pawn
+					for(int k=j-1;k>=0;k--) {
+						
+						// break if pawn is out of citadels and it is moving on a citadel
+						if(!citadels.contains(state.getBox(i, j))&& citadels.contains(state.getBox(i, k))) {
+							break;
+						}
+						// check if we are moving on a empty cell
+						else if(state.getPawn(i, k).equalsPawn(State.Pawn.EMPTY.toString())) {
+							
+							String from = state.getBox(i, j);
+							String to = state.getBox(i, k);
+							
+							Action action = null;
+							try {
+								action = new Action(from, to, turn);
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							
+							// check if action is admissible and if it is, add it to list possibleActions
+							try {
+								isPossibleMove(state.clone(),action);
+								possibleActions.add(action);
+								
+							}catch (Exception e) {
 
+							}
+						}else {
+							// there is a pawn in the same row and it cannot be crossed
+							break;
+						}
+					}
+					
+					// search on right of pawn
+					
+				for(int k=j+1; k<state.getBoard().length; k++) {
+					
+					// break if pawn is out of citadels and it is moving on a citadel
+					if (!citadels.contains(state.getBox(i, j)) && citadels.contains(state.getBox(i, k))) {
+						break;
+					}
+					// check if we are moving on a empty cell
+					else if (state.getPawn(i, k).equalsPawn(State.Pawn.EMPTY.toString())){
 
+						String from = state.getBox(i, j);
+						String to = state.getBox(i, k);
+
+						Action action = null;
+						try {
+							action = new Action(from, to, turn);
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+
+						// check if action is admissible and if it is, add it to list possibleActions
+						try {
+							isPossibleMove(state.clone(), action);
+							possibleActions.add(action);
+
+						} catch (Exception e) {
+
+						}
+					} else {
+						// there is a pawn in the same row and it cannot be crossed
+						break;
+					}
+				}
+					
+					
+				}
+			}
+		}
+		return possibleActions;
+	}
+
+	
+	public boolean isPossibleMove(State state, Action a) throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
+	ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
+		this.loggGame.fine(a.toString());
+	}
+	}
 }
