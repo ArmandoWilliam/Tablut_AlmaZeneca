@@ -6,9 +6,6 @@ import it.unibo.ai.didattica.competition.tablut.domain.State;
 import aima.core.search.adversarial.Game;
 import it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 /**
  * Custom implementation of AIMA iterative deepening Minimax search with alpha-beta pruning
