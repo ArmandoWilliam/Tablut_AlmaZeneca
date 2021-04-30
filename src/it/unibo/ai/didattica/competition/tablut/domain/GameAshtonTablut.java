@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
+import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 import it.unibo.ai.didattica.competition.tablut.exceptions.*;
 
 /**
@@ -21,7 +22,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.*;
  * @author A. Piretti, Andrea Galassi
  *
  */
-public class GameAshtonTablut implements Game {
+public class GameAshtonTablut implements Game, aima.core.search.adversarial.Game<State, Action, Turn> {
 
 	/**
 	 * Number of repeated states that can occur before a draw
@@ -747,6 +748,48 @@ public class GameAshtonTablut implements Game {
 	@Override
 	public void endGame(State state) {
 		this.loggGame.fine("Stato:\n"+state.toString());
+	}
+
+	@Override
+	public List<Action> getActions(State arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public State getInitialState() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Turn getPlayer(State arg0) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Turn[] getPlayers() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public State getResult(State arg0, Action arg1) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public double getUtility(State arg0, Turn arg1) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean isTerminal(State arg0) {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 
