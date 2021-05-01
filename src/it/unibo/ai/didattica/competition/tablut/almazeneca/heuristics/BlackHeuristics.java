@@ -33,7 +33,7 @@ public class BlackHeuristics {
 	}
 	
 	
-	
+	//get the position of the king in the board
 	public int[] getKingPosition() {
 		
 		int[] kingPosition = {};
