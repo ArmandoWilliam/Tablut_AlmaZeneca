@@ -25,7 +25,7 @@ public class BlackHeuristics {
 		double result=0;
 		result+= WEIGHT_BLACK_PAWN*this.numBlackPawn;
 		result+=WEIGHT_WHITE_PAWN*this.numWhitePawn;
-		result+=WEIGHT_KING_POS*this.kingPosition;
+//		result+=WEIGHT_KING_POS*this.kingPosition;
 		
 		return result;
 		
