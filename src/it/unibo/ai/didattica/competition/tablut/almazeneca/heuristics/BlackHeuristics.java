@@ -52,9 +52,9 @@ public class BlackHeuristics {
 
 
 
-	public double evalKingPosition() {
-		if(kingPosition + [0][1]) {
-			
-		}
-	}
+//	public double evalKingPosition() {
+//		if(kingPosition + [0][1]) {
+//			
+//		}
+//	}
 }
