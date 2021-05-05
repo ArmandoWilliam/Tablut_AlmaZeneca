@@ -2,7 +2,7 @@ package strategy;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 
-public class BlackHeuristic implements Heuristic {
+public class BlackHeuristics implements Heuristics {
 
 	@Override
 	public double heuristic(State state) {

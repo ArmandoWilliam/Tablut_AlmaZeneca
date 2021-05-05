@@ -1,8 +1,12 @@
 package strategy;
 
-import it.unibo.ai.didattica.competition.tablut.domain.State;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Random;
 
-public class WhiteHeuristic implements Heuristic {
+import it.unibo.ai.didattica.competition.tablut.domain.State;
+import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+public class WhiteHeuristics implements Heuristics {
 
 	private int countB;
 	private int countW;
@@ -21,7 +25,14 @@ public class WhiteHeuristic implements Heuristic {
 	private int strategy;
 	
 	//pesi 
-	
+	private double WHITE_WEIGHT_COUNT_WHITE_PAWNS= 7.0;
+	private double WHITE_WEIGHT_COUNT_BLACK_PAWNS= 5.0;
+	private double WHITE_WEIGHT_SINGLE_FREE_WAY_KING= 8.0;
+	private double WHITE_WEIGHT_MULTIPLE_FREE_WAY_KING=12.0;
+	private double WHITE_WEIGHT_KING_OVERHANGED = 22.0;
+	private double WHITE_WEIGHT_KING_ON_BLUE= 15.0;
+	private double WHITE_WEIGHT_STRATEGY = 7.0;
+	private double WHITE_WEIGHT_KING_ON_THRONE = 4.0;
 	private int pawnsB;
 	private int pawnsW;
 
@@ -57,11 +68,47 @@ public class WhiteHeuristic implements Heuristic {
 	public double heuristic(State state) {
 		// TODO Auto-generated method stub
 		//inizializza&resetta
-		//extractValues 
+		this.resetValues();
 		
+		//extractValues 
+		this.extractValues(state);
 		
 		//calcolo euristica
-		return 0;
+		double result= 0;
+		
+		//controllo se il vincitore è il nero
+		if (state.getTurn().equalsTurn(Turn.BLACKWIN.toString())) {
+			return Double.NEGATIVE_INFINITY; //valore -infinito?
+		}
+		//re inesperto  
+				if(this.kingOverhanged>0) {
+					result -= WHITE_WEIGHT_KING_OVERHANGED * this.kingOverhanged;
+				}else {
+					if (this.kingFreeWay == 1) {
+						result += WHITE_WEIGHT_SINGLE_FREE_WAY_KING * this.kingFreeWay;
+					} else {
+						if (this.kingFreeWay > 1) {
+							result += WHITE_WEIGHT_MULTIPLE_FREE_WAY_KING * (this.kingFreeWay);
+						}
+					}
+				}
+		
+		result -= WHITE_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
+		result += WHITE_WEIGHT_KING_ON_BLUE * this.kingOnStar;
+
+		//peso delle pedine nere
+		if(this.countB< this.pawnsB) {
+			result+= this.WHITE_WEIGHT_COUNT_BLACK_PAWNS*(this.pawnsB-this.countB);
+		}
+		//peso delle pedine bianche
+		if(this.countW< this.pawnsW) {
+			//sottraggo il peso?
+		
+			result -= WHITE_WEIGHT_COUNT_WHITE_PAWNS * (this.pawnsW - this.countW);
+		}
+		
+		
+		return result;
 	}
 	
 	
@@ -350,10 +397,28 @@ public class WhiteHeuristic implements Heuristic {
 								kingOverhanged++;
 							}
 							
-					}
+						
+					
 						
 						
 	}
 	
+		private void resetValues() {
+			this.countB = 0;
+			this.countW = 0;
+			this.blackNearKing = 0;
+			this.whiteNearKing = 0;
+			this.kingFreeWay = 0;
+			this.kingOnThrone = 0;
+			this.kingOnStar = 0;
+			this.kingNearThrone = 0;
+			this.kingFromBorder = 0;
+			this.blackPawnsOverhanged = 0;
+			this.whitePawnsOverhanged = 0;
+			this.kingOverhanged = 0;
+			this.kingOnFavourite = 0;
+			this.guards = 0;
+
+		}
 
 }
