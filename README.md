@@ -1,1 +1,1 @@
-# Tablut_AlmaZeneca
+# :syringe: Tablut Challenge 2020
