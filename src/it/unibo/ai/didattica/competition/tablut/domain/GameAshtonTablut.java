@@ -12,9 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-import almaZeneca.heuristic.BlackHeuristics;
-import almaZeneca.heuristic.Heuristics;
-import almaZeneca.heuristic.WhiteHeuristics;
+import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.BlackHeuristics;
+import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.Heuristics;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ActionException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.BoardException;
