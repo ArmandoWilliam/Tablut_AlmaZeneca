@@ -22,6 +22,6 @@ public class Heuristics {
    }
 
 	public double evaluateState() {
-		return 0;
+		return 1;
 	}
 }
