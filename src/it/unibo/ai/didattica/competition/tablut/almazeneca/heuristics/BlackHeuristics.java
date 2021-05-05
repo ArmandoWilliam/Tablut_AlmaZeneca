@@ -3,7 +3,7 @@ package it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Pawn;
 
-public class BlackHeuristics {
+public class BlackHeuristics extends Heuristics {
 	
 	protected State state;
 	private int numBlackPawn;
@@ -17,18 +17,15 @@ public class BlackHeuristics {
 	private static final double WHEIGHT_OPEN_WAYS = 30;
 	
 	private final int[][] rhombus = {
-      {1,2}, {1,6},
-      {2,1}, {2,7},
-      {6,1}, {6,7},
-      {7,2}, {7,6}
-};
+									{1,2}, {1,6},
+											{2,1}, {2,7},
+													{6,1}, {6,7},
+															{7,2}, {7,6}
+	};
 
-	
 	public BlackHeuristics(State state) {
-		this.state = state;
+		super(state);
 	}
-
-
 
 	public double evaluate(State state) {
 		

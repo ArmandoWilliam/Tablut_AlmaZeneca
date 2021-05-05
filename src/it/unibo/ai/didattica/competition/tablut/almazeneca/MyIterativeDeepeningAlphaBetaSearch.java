@@ -1,4 +1,4 @@
-package almaZeneca;
+package it.unibo.ai.didattica.competition.tablut.almazeneca;
 
 import aima.core.search.adversarial.IterativeDeepeningAlphaBetaSearch;
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
