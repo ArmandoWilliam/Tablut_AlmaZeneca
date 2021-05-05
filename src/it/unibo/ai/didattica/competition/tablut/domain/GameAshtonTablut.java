@@ -12,15 +12,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-<<<<<<< HEAD
+
 import almaZeneca.heuristic.BlackHeuristics;
 import almaZeneca.heuristic.Heuristics;
 import almaZeneca.heuristic.WhiteHeuristics;
-=======
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
->>>>>>> refs/heads/armando
-import it.unibo.ai.didattica.competition.tablut.exceptions.*;
-
+import it.unibo.ai.didattica.competition.tablut.exceptions.ActionException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.BoardException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.CitadelException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ClimbingCitadelException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ClimbingException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.DiagonalException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
 /**
  * 
  * Game engine inspired by the Ashton Rules of Tablut
@@ -854,48 +860,6 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 		public State.Turn getPlayer(State state) {
 			return state.getTurn();
 		}
-
-	@Override
-	public List<Action> getActions(State arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public State getInitialState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Turn getPlayer(State arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Turn[] getPlayers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public State getResult(State arg0, Action arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public double getUtility(State arg0, Turn arg1) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean isTerminal(State arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
 
 
 
