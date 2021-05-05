@@ -12,7 +12,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-
 import almaZeneca.heuristic.BlackHeuristics;
 import almaZeneca.heuristic.Heuristics;
 import almaZeneca.heuristic.WhiteHeuristics;
@@ -839,30 +838,6 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 		this.loggGame.fine("Stato:\n"+state.toString());
 		
 	}
-		/* Not used in AlphaBetaSearch */
-		@Override
-		public State getInitialState() {
-			return null;
-		}
-
-		/* Not used in AlphaBetaSearch */
-		@Override
-		public State.Turn[] getPlayers() {
-			return new State.Turn[0];
-		}
-
-		/**
-		 * Get the player who has to make the next move
-		 * @param state Current state
-		 * @return Turn of the game (W or B)
-		 */
-		@Override
-		public State.Turn getPlayer(State state) {
-			return state.getTurn();
-		}
-
-
-
 		/**
 		 * Method that compute a list of all possible actions for current player according to the rules of game.
 		 *
@@ -1299,7 +1274,7 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 			// if it isn't a terminal state
 			Heuristics heuristics = null;
 			if (turn.equals(State.Turn.WHITE)) {
-				heuristics = new WhiteHeuristics(state);
+//				heuristics = new WhiteHeuristics(state);
 			} else {
 				heuristics = new BlackHeuristics(state);
 			}
@@ -1310,5 +1285,23 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 		@Override
 		public Object clone() throws CloneNotSupportedException {
 			return super.clone();
+		}
+
+		@Override
+		public State getInitialState() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Turn getPlayer(State arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Turn[] getPlayers() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 }
