@@ -427,7 +427,6 @@ public class BlackHeuristics extends Heuristics{
 		boolean result = false;
 		
 		
-		
 		return result;
 	}
 
