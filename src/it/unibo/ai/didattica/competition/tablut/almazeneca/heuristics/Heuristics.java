@@ -2,7 +2,7 @@ package it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 
-public class Heuristics {
+public abstract class Heuristics {
 	
 	protected State state;
 	
