@@ -110,6 +110,11 @@ public class BlackHeuristics extends Heuristics {
         return count;
     }
 	
+	/**
+	 * 
+	 * @return true if king is in the squares near the throne, false if not
+	 * 
+	 */
 	public boolean kingIsNearThrone(){
 		
 		//structure that represent the squares near the throne
@@ -137,7 +142,11 @@ public class BlackHeuristics extends Heuristics {
 	}
 	
 	
-	
+	/**
+	 * 
+	 * @return true if king has an open way to escape from the board, false if not
+	 * 
+	 */
 	public boolean kingHasOpenWays() {
 		
 		//check if the king is near the throne
@@ -194,6 +203,11 @@ public class BlackHeuristics extends Heuristics {
 	}
 	*/
 	
+	/**
+	 * 
+	 * @return count how many open possible ways there are not closed by the rhombus strategy
+	 * 
+	 */
 	public int checkOpenWays() {
 		int count=8; 
 		
