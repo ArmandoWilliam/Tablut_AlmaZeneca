@@ -11,10 +11,11 @@ import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
-
 import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.BlackHeuristics;
 import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.Heuristics;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.BlackHeuristics;
+import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.Heuristics;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ActionException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.BoardException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.CitadelException;
@@ -25,6 +26,7 @@ import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
 import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
+
 /**
  * 
  * Game engine inspired by the Ashton Rules of Tablut
@@ -126,7 +128,7 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 		// this.strangeCitadels.add("e9");
 	}
 
-	/*@Override
+	@Override
 	public State checkMove(State state, Action a)
 			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
 			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
@@ -340,76 +342,76 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 		System.out.println("Stato:\n" + state.toString());
 
 		return state;
-	}*/
-	
-	@Override
-	public State checkMove(State state, Action a)
-			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
-			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
-
-		if(isPossibleMove(state,a)) {
-
-			// se sono arrivato qui, muovo la pedina
-			state = this.movePawn(state, a);
-
-			// a questo punto controllo lo stato per eventuali catture
-			if (state.getTurn().equalsTurn("W")) {
-				state = this.checkCaptureBlack(state, a);
-			} else if (state.getTurn().equalsTurn("B")) {
-				state = this.checkCaptureWhite(state, a);
-			}
-
-			// if something has been captured, clear cache for draws
-			if (this.movesWithutCapturing == 0) {
-				this.drawConditions.clear();
-				this.loggGame.fine("Capture! Draw cache cleared!");
-			}
-
-			// controllo pareggio
-			int trovati = 0;
-			for (State s : drawConditions) {
-
-				System.out.println(s.toString());
-
-				if (s.equals(state)) {
-					// DEBUG: //
-					// System.out.println("UGUALI:");
-					// System.out.println("STATO VECCHIO:\t" + s.toLinearString());
-					// System.out.println("STATO NUOVO:\t" +
-					// state.toLinearString());
-
-					trovati++;
-					if (trovati > repeated_moves_allowed) {
-						state.setTurn(State.Turn.DRAW);
-						this.loggGame.fine("Partita terminata in pareggio per numero di stati ripetuti");
-						break;
-					}
-				} else {
-					// DEBUG: //
-					// System.out.println("DIVERSI:");
-					// System.out.println("STATO VECCHIO:\t" + s.toLinearString());
-					// System.out.println("STATO NUOVO:\t" +
-					// state.toLinearString());
-				}
-			}
-			if (trovati > 0) {
-				this.loggGame.fine("Equal states found: " + trovati);
-			}
-			if (cache_size >= 0 && this.drawConditions.size() > cache_size) {
-				this.drawConditions.remove(0);
-			}
-			this.drawConditions.add(state.clone());
-
-			this.loggGame.fine("Current draw cache size: " + this.drawConditions.size());
-
-			this.loggGame.fine("Stato:\n" + state.toString());
-			System.out.println("Stato:\n" + state.toString());
-
-			return state;
-		}
-
-		return null;
 	}
+	
+//	@Override
+//	public State checkMove(State state, Action a)
+//			throws BoardException, ActionException, StopException, PawnException, DiagonalException, ClimbingException,
+//			ThroneException, OccupitedException, ClimbingCitadelException, CitadelException {
+//
+//		if(isPossibleMove(state,a)) {
+//
+//			// se sono arrivato qui, muovo la pedina
+//			state = this.movePawn(state, a);
+//
+//			// a questo punto controllo lo stato per eventuali catture
+//			if (state.getTurn().equalsTurn("W")) {
+//				state = this.checkCaptureBlack(state, a);
+//			} else if (state.getTurn().equalsTurn("B")) {
+//				state = this.checkCaptureWhite(state, a);
+//			}
+//
+//			// if something has been captured, clear cache for draws
+//			if (this.movesWithutCapturing == 0) {
+//				this.drawConditions.clear();
+//				this.loggGame.fine("Capture! Draw cache cleared!");
+//			}
+//
+//			// controllo pareggio
+//			int trovati = 0;
+//			for (State s : drawConditions) {
+//
+//				System.out.println(s.toString());
+//
+//				if (s.equals(state)) {
+//					// DEBUG: //
+//					// System.out.println("UGUALI:");
+//					// System.out.println("STATO VECCHIO:\t" + s.toLinearString());
+//					// System.out.println("STATO NUOVO:\t" +
+//					// state.toLinearString());
+//
+//					trovati++;
+//					if (trovati > repeated_moves_allowed) {
+//						state.setTurn(State.Turn.DRAW);
+//						this.loggGame.fine("Partita terminata in pareggio per numero di stati ripetuti");
+//						break;
+//					}
+//				} else {
+//					// DEBUG: //
+//					// System.out.println("DIVERSI:");
+//					// System.out.println("STATO VECCHIO:\t" + s.toLinearString());
+//					// System.out.println("STATO NUOVO:\t" +
+//					// state.toLinearString());
+//				}
+//			}
+//			if (trovati > 0) {
+//				this.loggGame.fine("Equal states found: " + trovati);
+//			}
+//			if (cache_size >= 0 && this.drawConditions.size() > cache_size) {
+//				this.drawConditions.remove(0);
+//			}
+//			this.drawConditions.add(state.clone());
+//
+//			this.loggGame.fine("Current draw cache size: " + this.drawConditions.size());
+//
+//			this.loggGame.fine("Stato:\n" + state.toString());
+//			System.out.println("Stato:\n" + state.toString());
+//
+//			return state;
+//		}
+//
+//		return null;
+//	}
 
 	private State checkCaptureWhite(State state, Action a) {
 		// controllo se mangio a destra
@@ -837,6 +839,7 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 		this.loggGame.fine("Stato:\n"+state.toString());
 		
 	}
+ 
 		/**
 		 * Method that compute a list of all possible actions for current player according to the rules of game.
 		 *

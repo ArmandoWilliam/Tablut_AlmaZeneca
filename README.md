@@ -1,1 +1,1 @@
-# ChallengeIATablut2020-21
+# :syringe: Tablut Challenge 2020
