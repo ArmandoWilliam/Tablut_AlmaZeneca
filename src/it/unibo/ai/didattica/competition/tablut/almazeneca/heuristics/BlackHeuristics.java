@@ -387,39 +387,143 @@ public class BlackHeuristics extends Heuristics{
 		return count;
 	}
 	
-
 	/**
-	 * This method find a pawn that can eat you and return the position if founded
+	 * This method tell us if a pawn is in danger to be captured
 	 * 
-	 * @return the position of a pawn that can potentially eat your pawn in a specific position
-	 * @param the position of the pawn that can be potentially captured by another enemy pawn
+	 * @return true if a specific pawn is in danger to be captured from any position
+	 * @param the position of the pawn that can be potentially captured by others enemy pawns
 	 * 
 	 */
-	public int[] aboutToBeCaptured(int[] position) {
+	public boolean isPawnInDanger(int[] position) {
 		
 		State.Pawn board[][]=this.state.getBoard();
-		int[] result = {-1,-1};
+		boolean result = false;
 		
-		//control on the right
-		for (int i=position[1]; i<board[position[1]].length; i++)
-			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
-				result=position;
+		int colOnTheRight=position[1]+1;
+		int colOnTheLeft=position[1]-1;
+		int rowAbove=position[0]-1;
+		int rowBelow=position[0]-1;
 				
-		//control on the left
-		for (int i=position[1]; i>=0; i--)
-			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
-				result=position;
+		//control in the column on the right
+		for (int i=0; i<board.length && !board[position[0]][colOnTheRight].equals(State.Pawn.EMPTY); i++) {
+			if(board[i][colOnTheRight].equals(State.Pawn.WHITE)) {
 				
-		//control above
-		for (int i=position[0]; i<board[position[1]].length; i++)
-			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
-				result=position;
-				
-		//control below
-		for (int i=position[0]; i>=0; i--)
-			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
-				result=position;
+				int emptySquares=0;
+				if(i < position[0]) {					
+					//is on the top
+					int squaresToMyPawn=i-rowAbove;
+					for(int z=i+1; z<position[0]; z++) {
+						if (board[z][colOnTheRight].equals(State.Pawn.EMPTY)) {
+							emptySquares++;
+						}
+					}
+					if (emptySquares == squaresToMyPawn)
+						return true;
+				} 
+				else if (i > position[0]) {
+					//is on the bottom
+					int squaresToMyPawn=i-rowBelow;
+					for(int z=i-1; z>position[0]; z--) {
+						if (board[z][colOnTheRight].equals(State.Pawn.EMPTY)) {
+							emptySquares++;
+						}
+					}
+					if (emptySquares == squaresToMyPawn)
+						return true;
+				}
+					
+			}
+		}
 		
+		//control in the column on the left
+		for (int i=0; i<board.length && !board[position[0]][colOnTheLeft].equals(State.Pawn.EMPTY); i++) {
+			if(board[i][colOnTheLeft].equals(State.Pawn.WHITE)) {
+				
+				int emptySquares=0;
+				if(i < position[0]) {					
+					//is on the top
+					int squaresToMyPawn=i-rowAbove;
+					for(int z=i+1; z<position[0]; z++) {
+						if (board[z][colOnTheLeft].equals(State.Pawn.EMPTY)) {
+							emptySquares++;
+						}
+					}
+					if (emptySquares == squaresToMyPawn)
+						return true;
+				} 
+				else if (i > position[0]) {
+					//is on the bottom
+					int squaresToMyPawn=i-rowBelow;
+					for(int z=i-1; z>position[0]; z--) {
+						if (board[z][colOnTheLeft].equals(State.Pawn.EMPTY)) {
+							emptySquares++;
+						}
+					}
+					if (emptySquares == squaresToMyPawn)
+						return true;
+				}
+					
+			}
+		}
+		
+		//control in the row on the top
+		for (int i=0; i<board[rowAbove].length && !board[position[0]][rowAbove].equals(State.Pawn.EMPTY); i++) {
+			if(board[rowAbove][i].equals(State.Pawn.WHITE)) {
+				
+				int emptySquares=0;
+				if(i < position[0]) {					
+					//is on the left
+					int squaresToMyPawn=i-colOnTheLeft;
+					for(int z=i+1; z<position[0]; z++) {
+						if (board[rowAbove][z].equals(State.Pawn.EMPTY)) {
+							emptySquares++;
+						}
+					}
+					if (emptySquares == squaresToMyPawn)
+						return true;
+				} 
+				else if (i > position[0]) {
+					//is on the right
+					int squaresToMyPawn=i-colOnTheRight;
+					for(int z=i-1; z>position[0]; z--) {
+						if (board[rowAbove][z].equals(State.Pawn.EMPTY)) {
+							emptySquares++;
+						}
+					}
+					if (emptySquares == squaresToMyPawn)
+						return true;
+				}	
+			}
+		}
+		//control in the row below
+		for (int i=0; i<board[rowBelow].length && !board[position[0]][rowBelow].equals(State.Pawn.EMPTY); i++) {
+			if(board[rowBelow][i].equals(State.Pawn.WHITE)) {
+				
+				int emptySquares=0;
+				if(i < position[0]) {					
+					//is on the left
+					int squaresToMyPawn=i-colOnTheLeft;
+					for(int z=i+1; z<position[0]; z++) {
+						if (board[rowBelow][z].equals(State.Pawn.EMPTY)) {
+							emptySquares++;
+						}
+					}
+					if (emptySquares == squaresToMyPawn)
+						return true;
+				} 
+				else if (i > position[0]) {
+					//is on the right
+					int squaresToMyPawn=i-colOnTheRight;
+					for(int z=i-1; z>position[0]; z--) {
+						if (board[rowBelow][z].equals(State.Pawn.EMPTY)) {
+							emptySquares++;
+						}
+					}
+					if (emptySquares == squaresToMyPawn)
+						return true;
+				}	
+			}
+		}		
 		return result;
 	}
 	
@@ -441,11 +545,4 @@ public class BlackHeuristics extends Heuristics{
 			return 3;
 		return 4;
 	}
-
-
-//	public double evalKingPosition() {
-//		if(kingPosition + [0][1]) {
-//			
-//		}
-//	}
 }
