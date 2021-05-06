@@ -16,6 +16,7 @@ public class BlackHeuristics extends Heuristics {
 	
 	private static final double WHEIGHT_OPEN_WAYS = 30;
 	
+	//bidimensional array that represent the rhombus strategy
 	private final int[][] rhombus = {
 									{1,2}, {1,6},
 											{2,1}, {2,7},
@@ -42,7 +43,7 @@ public class BlackHeuristics extends Heuristics {
 		result+=WEIGHT_BLACK_PAWN*this.numBlackPawn;
 		result-=WEIGHT_WHITE_PAWN*this.numWhitePawn;
 		
-		result+=WEIGHT_PAWN_NEAR_KING*(pawnsNearKing/this.pawnToEatKink());
+		result+=WEIGHT_PAWN_NEAR_KING*(pawnsNearKing/this.pawnToEatKing());
 		
 		result-=WHEIGHT_OPEN_WAYS*openWays;
 		
@@ -61,6 +62,8 @@ public class BlackHeuristics extends Heuristics {
 	}
 	
 	/**
+	 * This method returns the king position in the board represented with an array of int
+	 * 
 	 * @return the position of the king in the board
 	 */
 	public int[] getKingPosition() {
@@ -78,8 +81,12 @@ public class BlackHeuristics extends Heuristics {
 		}
 		return kingPosition;
 	}
-	
-	public int pawnToEatKink() {
+	/**
+	 * This method returns int that represents how many pawn are necessaries to eat the king
+	 * 
+	 * @return how many pawn are necessaries to eat the king
+	 */
+	public int pawnToEatKing() {
 		if (this.kingPosition[0]==4 && this.kingPosition[1]==4)
 			return 4;
 		if (this.kingIsNearThrone())
@@ -111,6 +118,7 @@ public class BlackHeuristics extends Heuristics {
     }
 	
 	/**
+	 * This method returns a boolean that express if the king is in one of the squares near the throne or not
 	 * 
 	 * @return true if king is in the squares near the throne, false if not
 	 * 
@@ -129,7 +137,10 @@ public class BlackHeuristics extends Heuristics {
 		return false;
 	}
 	
-	public boolean isCitadel(int x, int y) {
+	/*
+	 * This returns a boolean that express if a specific square is inside one of the citadel
+	 */
+	private boolean isCitadel(int x, int y) {
 		//structure that represent citadels squares
 		final int[][] citadels= {{0, 4}, {0,5}, {0, 6}, {1, 5}, {3, 8}, {4, 8}, {5, 8}, {4, 7}, 
 				{8, 5}, {8, 4}, {8, 3}, {7, 4}, {5, 0}, {4, 0}, {3, 0}, {4, 1}};
@@ -143,6 +154,7 @@ public class BlackHeuristics extends Heuristics {
 	
 	
 	/**
+	 * This method returns a boolean that express if there are or not open ways for the kind to escape from the board
 	 * 
 	 * @return true if king has an open way to escape from the board, false if not
 	 * 
@@ -204,8 +216,9 @@ public class BlackHeuristics extends Heuristics {
 	*/
 	
 	/**
+	 * This method counts how many possible open ways there are not covered by the rhombus strategy
 	 * 
-	 * @return count how many open possible ways there are not closed by the rhombus strategy
+	 * @return how many open possible ways there are, not closed by the rhombus strategy by black
 	 * 
 	 */
 	public int checkOpenWays() {
@@ -219,6 +232,50 @@ public class BlackHeuristics extends Heuristics {
 		
 		return count;
 	}
+	
+	/**
+	 * This method find a pawn that can eat you and return the position if founded
+	 * 
+	 * @return the position of a pawn that can potentially eat your pawn in a specific position
+	 * @param the position of the pawn that can be potentially captured by another enemy pawn
+	 * 
+	 */
+	public int[] aboutToBeCaptured(int[] position) {
+		
+		State.Pawn board[][]=this.state.getBoard();
+		int[] result = {-1,-1};
+		
+		//control on the right
+		for (int i=position[1]; i<board[position[1]].length; i++)
+			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
+				result=position;
+				
+		//control on the left
+		for (int i=position[1]; i>=0; i--)
+			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
+				result=position;
+				
+		//control above
+		for (int i=position[0]; i<board[position[1]].length; i++)
+			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
+				result=position;
+				
+		//control below
+		for (int i=position[0]; i>=0; i--)
+			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
+				result=position;
+		
+		return result;
+	}
+	
+	public boolean canCapture() {
+		boolean result = false;
+		
+		
+		
+		return result;
+	}
+
 
 
 //	public double evalKingPosition() {
