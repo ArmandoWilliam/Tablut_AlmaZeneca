@@ -12,13 +12,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
-<<<<<<< HEAD
 import almaZeneca.heuristic.BlackHeuristics;
 import almaZeneca.heuristic.Heuristics;
 import almaZeneca.heuristic.WhiteHeuristics;
-=======
+
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
->>>>>>> refs/heads/armando
+
 import it.unibo.ai.didattica.competition.tablut.exceptions.*;
 
 /**
@@ -833,70 +832,6 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 		this.loggGame.fine("Stato:\n"+state.toString());
 		
 	}
-		/* Not used in AlphaBetaSearch */
-		@Override
-		public State getInitialState() {
-			return null;
-		}
-
-		/* Not used in AlphaBetaSearch */
-		@Override
-		public State.Turn[] getPlayers() {
-			return new State.Turn[0];
-		}
-
-		/**
-		 * Get the player who has to make the next move
-		 * @param state Current state
-		 * @return Turn of the game (W or B)
-		 */
-		@Override
-		public State.Turn getPlayer(State state) {
-			return state.getTurn();
-		}
-
-	@Override
-	public List<Action> getActions(State arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public State getInitialState() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Turn getPlayer(State arg0) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public Turn[] getPlayers() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public State getResult(State arg0, Action arg1) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public double getUtility(State arg0, Turn arg1) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	@Override
-	public boolean isTerminal(State arg0) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
 
 
 		/**
@@ -1346,5 +1281,23 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 		@Override
 		public Object clone() throws CloneNotSupportedException {
 			return super.clone();
+		}
+
+		@Override
+		public State getInitialState() {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Turn getPlayer(State arg0) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+
+		@Override
+		public Turn[] getPlayers() {
+			// TODO Auto-generated method stub
+			return null;
 		}
 }
