@@ -37,7 +37,7 @@ public class BlackHeuristics extends Heuristics {
 		
 		int openWays=this.checkOpenWays();
 		
-		//valore valutazione
+		//evaluation value
 		double result=0;
 		result+=WEIGHT_BLACK_PAWN*this.numBlackPawn;
 		result-=WEIGHT_WHITE_PAWN*this.numWhitePawn;
@@ -60,8 +60,9 @@ public class BlackHeuristics extends Heuristics {
 		
 	}
 	
-	
-	//get the position of the king in the board
+	/**
+	 * @return the position of the king in the board
+	 */
 	public int[] getKingPosition() {
 		
 		int[] kingPosition = {};
@@ -86,7 +87,13 @@ public class BlackHeuristics extends Heuristics {
 		return 2;
 	}
 	
-	
+	/**
+	 * 
+	 * @return a specific type of Pawn near a specific position
+	 * 
+	 * @param state: the state of the board, position: the specified position we want to analyze, target: the specific pawn type we want to see if it's near the position
+	 *  
+	 */
 	public int checkNearPawns(State state, int[] position, State.Pawn target){
         int count=0;
         //GET TURN
@@ -105,6 +112,7 @@ public class BlackHeuristics extends Heuristics {
 	
 	public boolean kingIsNearThrone(){
 		
+		//structure that represent the squares near the throne
 		final int [][] nearThrone= {{3, 3}, {3, 4}, {3, 5},
 				{4, 3}, {4, 4}, {4, 5},
 				{5, 3}, {5, 4}, {5, 5}};
@@ -117,10 +125,11 @@ public class BlackHeuristics extends Heuristics {
 	}
 	
 	public boolean isCitadel(int x, int y) {
-		final int[][] cittadelle= {{0, 4}, {0,5}, {0, 6}, {1, 5}, {3, 8}, {4, 8}, {5, 8}, {4, 7}, 
+		//structure that represent citadels squares
+		final int[][] citadels= {{0, 4}, {0,5}, {0, 6}, {1, 5}, {3, 8}, {4, 8}, {5, 8}, {4, 7}, 
 				{8, 5}, {8, 4}, {8, 3}, {7, 4}, {5, 0}, {4, 0}, {3, 0}, {4, 1}};
 		
-		for (int cit[] : cittadelle)
+		for (int cit[] : citadels)
 			if (x==cit[0] && y==cit[1])
 				return true;
 		return false;
@@ -131,37 +140,36 @@ public class BlackHeuristics extends Heuristics {
 	
 	public boolean kingHasOpenWays() {
 		
-		//controllo se il re è vicino al trono
+		//check if the king is near the throne
 		if (this.kingIsNearThrone())
 			return false;
 		
-		int riga=this.kingPosition[0];
-		int colonna= this.kingPosition[1];
+		int row=this.kingPosition[0];
+		int col= this.kingPosition[1];
 		
 		State.Pawn board[][]=this.state.getBoard();
 
-		//controllo a destra
-		for (int i=colonna; i<board[colonna].length; i++)
-			if (board[colonna][i].equals(State.Pawn.EMPTY) && ! isCitadel(colonna, i))
-				return true;
-		//controllo a sinistra
-		for (int i=colonna; i>=0; i--)
-			if (board[colonna][i].equals(State.Pawn.EMPTY) && ! isCitadel(colonna, i))
+		//control on the right
+		for (int i=col; i<board[col].length; i++)
+			if (board[col][i].equals(State.Pawn.EMPTY) && ! isCitadel(col, i))
 				return true;
 		
-		//controllo sopra
-		
-		for (int i=riga; i<board[colonna].length; i++)
-			if (board[riga][i].equals(State.Pawn.EMPTY) && ! isCitadel(riga, i))
+		//control on the left
+		for (int i=col; i>=0; i--)
+			if (board[col][i].equals(State.Pawn.EMPTY) && ! isCitadel(col, i))
 				return true;
-		//controllo sotto
-		for (int i=riga; i>=0; i--)
-			if (board[riga][i].equals(State.Pawn.EMPTY) && ! isCitadel(riga, i))
+		
+		//control above
+		for (int i=row; i<board[col].length; i++)
+			if (board[row][i].equals(State.Pawn.EMPTY) && ! isCitadel(row, i))
+				return true;
+		
+		//control below
+		for (int i=row; i>=0; i--)
+			if (board[row][i].equals(State.Pawn.EMPTY) && ! isCitadel(row, i))
 				return true;
 		return false;
 	}
-		
-		
 		
 	/*
 	public boolean isFreeRow(int r) {
