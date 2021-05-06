@@ -20,6 +20,20 @@ import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
 import it.unibo.ai.didattica.competition.tablut.exceptions.*;
 
+import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.BlackHeuristics;
+import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.Heuristics;
+import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ActionException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.BoardException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.CitadelException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ClimbingCitadelException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ClimbingException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.DiagonalException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.OccupitedException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.PawnException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.StopException;
+import it.unibo.ai.didattica.competition.tablut.exceptions.ThroneException;
+
 /**
  * 
  * Game engine inspired by the Ashton Rules of Tablut
@@ -832,8 +846,7 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 		this.loggGame.fine("Stato:\n"+state.toString());
 		
 	}
-
-
+ 
 		/**
 		 * Method that compute a list of all possible actions for current player according to the rules of game.
 		 *
@@ -1270,7 +1283,7 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 			// if it isn't a terminal state
 			Heuristics heuristics = null;
 			if (turn.equals(State.Turn.WHITE)) {
-				heuristics = new WhiteHeuristics(state);
+//				heuristics = new WhiteHeuristics(state);
 			} else {
 				heuristics = new BlackHeuristics(state);
 			}

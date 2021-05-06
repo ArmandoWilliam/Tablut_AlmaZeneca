@@ -5,6 +5,7 @@ import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Pawn;
 
 public class BlackHeuristics extends Heuristics{
+
 	
 	
 	private int numBlackPawn;
@@ -18,14 +19,20 @@ public class BlackHeuristics extends Heuristics{
 	private static final double WEIGHT_WHITE_PAWN_EATEN = 18;
 	private static final double WEIGHT_PAWN_NEAR_KING = 20;
 	
-	private static final double WHEIGHT_OPEN_WAYS =15;
-	
 
+	//bidimensional array that represent the rhombus strategy
+//	private final int[][] rhombus = {
+//									{1,2}, {1,6},
+//											{2,1}, {2,7},
+//													{6,1}, {6,7},
+//															{7,2}, {7,6}
+//	};
 	
+	private static final double WHEIGHT_OPEN_WAYS =15;
+
 	public BlackHeuristics(State state) {
 		super(state);
 	}
-
 
 
 	public double evaluateState() {
@@ -69,12 +76,15 @@ public class BlackHeuristics extends Heuristics{
 		}
 	
 		
-		//valore valutazione
+		//evaluation value
 		double result=0;
 		result+=WEIGHT_BLACK_PAWN*this.numBlackPawn/GameAshtonTablut.NUM_BLACK;
 		result+=(bonusEatWhite*WEIGHT_WHITE_PAWN_EATEN*(GameAshtonTablut.NUM_WHITE-this.numWhitePawn)/GameAshtonTablut.NUM_WHITE);
 		
-		result+=WEIGHT_PAWN_NEAR_KING*pawnsNearKing/this.pawnToEatKink();
+
+		result+=WEIGHT_PAWN_NEAR_KING*(pawnsNearKing/this.pawnToEatKing());
+
+		result+=WEIGHT_PAWN_NEAR_KING*pawnsNearKing/this.pawnToEatKing();
 		
 		result+=WHEIGHT_OPEN_WAYS*openWays;
 		
@@ -92,8 +102,11 @@ public class BlackHeuristics extends Heuristics{
 		
 	}
 	
-	
-	//get the position of the king in the board
+	/**
+	 * This method returns the king position in the board represented with an array of int
+	 * 
+	 * @return the position of the king in the board
+	 */
 	public int[] getKingPosition() {
 		
 		int[] kingPosition = {4, 4};
@@ -109,15 +122,20 @@ public class BlackHeuristics extends Heuristics{
 		}
 		return kingPosition;
 	}
-	
-	public int pawnToEatKink() {
+	/**
+	 * This method returns int that represents how many pawn are necessaries to eat the king
+	 * 
+	 * @return how many pawn are necessaries to eat the king
+	 */
+	public int pawnToEatKing() {
 		if (this.kingPosition[0]==4 && this.kingPosition[1]==4)
 			return 4;
 		if (this.kingIsNearThrone())
 			return 3;
 		return 2;
 	}
-	
+
+        
 	public boolean kingIsprotected() {
 		
 		if (this.kingIsNearThrone())
@@ -134,7 +152,13 @@ public class BlackHeuristics extends Heuristics{
 		
 	
 
-	
+	/**
+	 * 
+	 * @return a specific type of Pawn near a specific position
+	 * 
+	 * @param state: the state of the board, position: the specified position we want to analyze, target: the specific pawn type we want to see if it's near the position
+	 *  
+	 */
 	public int[] checkNearPawns(State.Pawn target){
         int count[]= {-1, -1, -1, -1};
         //GET TURN
@@ -152,11 +176,18 @@ public class BlackHeuristics extends Heuristics{
     }
 	
 
+	/**
+	 * This method returns a boolean that express if the king is in one of the squares near the throne or not
+	 * 
+	 * @return true if king is in the squares near the throne, false if not
+	 * 
+	 */
+
 	public boolean goodPosition(int pos) {
 		
 		//valido solo quando il re è lontano dal castello
 		
-		if (this.pawnToEatKink()>2)
+		if (this.pawnToEatKing()>2)
 			return false;
 		
 		//pedina nera alla sinistra del re
@@ -187,7 +218,7 @@ public class BlackHeuristics extends Heuristics{
 				
 	}
 	
-	//vero se la posizione indicata è raggiongibile da una pedina nera (non scavalca pedine bianche)
+	//vero se la posizione indicata e raggiongibile da una pedina nera (non scavalca pedine bianche)
 	public boolean positionReachable(int x, int y) {
 		//guardo a destra
 		for (int i=x; i<this.board.length; i++)
@@ -220,8 +251,9 @@ public class BlackHeuristics extends Heuristics{
 		return false;
 	}
 
+
 	public boolean kingIsNearThrone(){
-		
+		//structure that represent the squares near the throne
 		final int [][] nearThrone= {	
 				
 										{3, 4},
@@ -235,9 +267,13 @@ public class BlackHeuristics extends Heuristics{
 		}
 		return false;
 	}
-	
+
+	 /*
+	 * This method returns a boolean that express if a specific square is inside one of the citadel
+	 */
 	public boolean isCitadel(int x, int y) {
-		final int[][] cittadelle= {
+		//structure that represent citadels squares
+		final int[][] citadels= {
 				
 									{0, 4}, {0, 5}, {0, 6}, 
 											{1, 5}, 
@@ -249,8 +285,9 @@ public class BlackHeuristics extends Heuristics{
 									{8, 5}, {8, 4}, {8, 3}   
 									
 		};
+
 		
-		for (int cit[] : cittadelle)
+		for (int cit[] : citadels)
 			if (x==cit[0] && y==cit[1])
 				return true;
 		return false;
@@ -258,15 +295,20 @@ public class BlackHeuristics extends Heuristics{
 	}
 	
 	
-	
+	/**
+	 * This method returns a boolean that express if there are or not open ways for the kind to escape from the board
+	 * 
+	 * @return true if king has an open way to escape from the board, false if not
+	 * 
+	 */
 	public boolean kingHasOpenWays() {
 		
-		//controllo se il re è vicino al trono
+		//check if the king is near the throne
 		if (this.kingIsNearThrone())
 			return false;
 		
-		int riga=this.kingPosition[0];
-		int colonna= this.kingPosition[1];
+		int colonna=this.kingPosition[0];
+		int riga= this.kingPosition[1];
 		
 
 		//controllo a destra
@@ -277,9 +319,7 @@ public class BlackHeuristics extends Heuristics{
 		for (int i=colonna; i>=0; i--)
 			if (!this.board[colonna][i].equals(State.Pawn.EMPTY) || isCitadel(colonna, i))
 				return false;
-		
-		//controllo sopra
-		
+		//controllo sopra		
 		for (int i=riga; i<board[colonna].length; i++)
 			if (!this.board[riga][i].equals(State.Pawn.EMPTY) || isCitadel(riga, i))
 				return false;
@@ -290,8 +330,6 @@ public class BlackHeuristics extends Heuristics{
 		
 		return true;
 	}
-		
-		
 		
 	/*
 	public boolean isFreeRow(int r) {
@@ -316,8 +354,17 @@ public class BlackHeuristics extends Heuristics{
 	}
 	*/
 	
+
+	/**
+	 * This method counts how many possible open ways there are not covered by the rhombus strategy
+	 * 
+	 * @return how many open possible ways there are, not closed by the rhombus strategy by black
+	 * 
+	 */
+
 	public int[] checkOpenWaysOnQuadrant() {
 		int count[]= {0, 0, 0, 0}; 
+
 		
 		if (state.getPawn(1, 2).equalsPawn(State.Pawn.BLACK.toString())) 
                 count[0]++;
@@ -340,6 +387,49 @@ public class BlackHeuristics extends Heuristics{
 		return count;
 	}
 	
+
+	/**
+	 * This method find a pawn that can eat you and return the position if founded
+	 * 
+	 * @return the position of a pawn that can potentially eat your pawn in a specific position
+	 * @param the position of the pawn that can be potentially captured by another enemy pawn
+	 * 
+	 */
+	public int[] aboutToBeCaptured(int[] position) {
+		
+		State.Pawn board[][]=this.state.getBoard();
+		int[] result = {-1,-1};
+		
+		//control on the right
+		for (int i=position[1]; i<board[position[1]].length; i++)
+			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
+				result=position;
+				
+		//control on the left
+		for (int i=position[1]; i>=0; i--)
+			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
+				result=position;
+				
+		//control above
+		for (int i=position[0]; i<board[position[1]].length; i++)
+			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
+				result=position;
+				
+		//control below
+		for (int i=position[0]; i>=0; i--)
+			if(!board[position[1]][i].equals(State.Pawn.EMPTY))
+				result=position;
+		
+		return result;
+	}
+	
+	public boolean canCapture() {
+		boolean result = false;
+		
+		
+		return result;
+	}
+
 	public int kingQuadrant() {
 		if(this.kingPosition[0]<4 && this.kingPosition[1]<4)
 			return 0;
