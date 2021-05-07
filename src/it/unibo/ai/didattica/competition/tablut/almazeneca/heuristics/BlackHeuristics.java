@@ -20,13 +20,13 @@ public class BlackHeuristics extends Heuristics{
 	private static final double WEIGHT_PAWN_NEAR_KING = 20;
 	
 
-	//bidimensional array that represent the rhombus strategy
-//	private final int[][] rhombus = {
-//									{1,2}, {1,6},
-//											{2,1}, {2,7},
-//													{6,1}, {6,7},
-//															{7,2}, {7,6}
-//	};
+//	bidimensional array that represent the rhombus strategy
+	private final int[][] rhombus = {
+									{1,2}, {1,6},
+											{2,1}, {2,7},
+													{6,1}, {6,7},
+															{7,2}, {7,6}
+	};
 	
 	private static final double WHEIGHT_OPEN_WAYS =15;
 
@@ -97,9 +97,16 @@ public class BlackHeuristics extends Heuristics{
 		if(state.getTurn().equals(State.Turn.WHITEWIN))
 			result+=100;
 		
+		for(int i=0; i<9; i++) {
+			for(int z=0;  state.getPawn(i, z).equals(Pawn.BLACK) && !state.getPawn(i, z).equals(Pawn.EMPTY) && i<9; z++) {
+				int[] temp = {i,z};
+				if(isPawnInDanger(temp)) {
+					result-=10;
+				}
+			}
+		}
+			
 		return result;
-		
-		
 	}
 	
 	/**
