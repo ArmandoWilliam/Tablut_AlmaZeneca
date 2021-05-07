@@ -6,10 +6,13 @@ import java.util.Random;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
-
 public class WhiteHeuristics extends Heuristics {
 
-	
+	public WhiteHeuristics(State state) {
+		super(state);
+		// TODO Auto-generated constructor stub
+	}
+
 	private int countB;
 	private int countW;
 	private int blackNearKing;
@@ -47,10 +50,6 @@ public class WhiteHeuristics extends Heuristics {
 
 	private List<String> blackBarrier;
 	
-	public WhiteHeuristics(State state) {
-		super(state);
-	}
-	
 	public WhiteHeuristics() {
 		this.pawnsB = 16;
 		this.pawnsW = 9;
@@ -70,8 +69,8 @@ public class WhiteHeuristics extends Heuristics {
 		this.guardsPos = Arrays.asList("a1", "a2", "b1", "h1", "i1", "i2", "i8", "i9", "h9", "b9", "a9", "a8");
 
 	}
-		
-	public double Heuristics(State state) {
+	@Override
+	public double evaluateState() {
 		// TODO Auto-generated method stub
 		//inizializza&resetta
 		this.resetValues();
@@ -403,13 +402,15 @@ public class WhiteHeuristics extends Heuristics {
 								kingOverhanged++;
 							}
 							
-						
-						
+						}
+					}
+				}
+			}
+		}
 					
-				
+						
 						
 	}
-					
 	
 		private void resetValues() {
 			this.countB = 0;
@@ -428,4 +429,5 @@ public class WhiteHeuristics extends Heuristics {
 			this.guards = 0;
 
 		}
+
 }
