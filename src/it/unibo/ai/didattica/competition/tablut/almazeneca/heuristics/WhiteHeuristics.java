@@ -6,12 +6,7 @@ import java.util.Random;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
-public class WhiteHeuristics extends Heuristics {
-
-	public WhiteHeuristics(State state) {
-		super(state);
-		// TODO Auto-generated constructor stub
-	}
+public class WhiteHeuristics extends Heuristics {	
 
 	private int countB;
 	private int countW;
@@ -50,7 +45,8 @@ public class WhiteHeuristics extends Heuristics {
 
 	private List<String> blackBarrier;
 	
-	public WhiteHeuristics() {
+	public WhiteHeuristics(State state) {
+		super(state);
 		this.pawnsB = 16;
 		this.pawnsW = 9;
 		this.r = new Random(System.currentTimeMillis());
