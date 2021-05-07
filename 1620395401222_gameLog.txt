@@ -1,0 +1,76 @@
+mag 07, 2021 3:50:01 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut <init>
+FINE: Inizio partita
+mag 07, 2021 3:50:47 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut movePawn
+FINE: Movimento pedina
+mag 07, 2021 3:50:47 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut checkMove
+FINE: Stato: OOOOOOOOO
+OOOOOOOOO
+BOOOOOOOO
+OOOOOOOOO
+OOOOTOOOO
+OOOOOOOOO
+OOOOOOOOO
+OOOOOOOOO
+OOOOOOOOO
+-
+W
+mag 07, 2021 3:51:37 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut movePawn
+FINE: Movimento pedina
+mag 07, 2021 3:51:37 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut checkCaptureBlack
+FINE: Pedina bianca rimossa in: c3
+mag 07, 2021 3:51:37 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut checkMove
+FINE: Stato: OOOOOOOOO
+OOOOOOOOO
+OBOBOOOOO
+OOOOOOOOO
+OOOOTOOOO
+OOOOOOOOO
+OOOOOOOOO
+OOOOOOOOO
+OOOOOOOOO
+-
+W
+mag 07, 2021 3:51:56 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut movePawn
+FINE: Movimento pedina
+mag 07, 2021 3:51:57 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut checkMove
+FINE: Stato: OOOOOOOOO
+OOOOOOOOO
+OOOBOOOOO
+OOOOOOOOO
+OBOOTOOOO
+OOOOOOOOO
+OOOOOOOOO
+OOOOOOOOO
+OOOOOOOOO
+-
+W
+mag 07, 2021 3:52:56 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut checkMove
+WARNING: Mossa in diagonale
+mag 07, 2021 3:53:11 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut movePawn
+FINE: Movimento pedina
+mag 07, 2021 3:53:11 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut checkMove
+FINE: Stato: OOOOOOOOO
+OOOOOOOOO
+OOOBOOOOO
+OBOOOOOOO
+OOOOTOOOO
+OOOOOOOOO
+OOOOOOOOO
+OOOOOOOOO
+OOOOOOOOO
+-
+W
+mag 07, 2021 3:53:16 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut movePawn
+FINE: Movimento pedina
+mag 07, 2021 3:53:16 PM it.unibo.ai.didattica.competition.tablut.domain.GameTablut checkMove
+FINE: Stato: OOOOOOOOO
+OOOOOOOOO
+OOOBOOOOO
+OOOOOOOOO
+OBOOTOOOO
+OOOOOOOOO
+OOOOOOOOO
+OOOOOOOOO
+OOOOOOOOO
+-
+W
