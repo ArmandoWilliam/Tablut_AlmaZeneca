@@ -7,135 +7,222 @@ import java.util.List;
 
 import it.unibo.ai.didattica.competition.tablut.almazeneca.minmax.MyIterativeDeepeningAlphaBetaSearch;
 import it.unibo.ai.didattica.competition.tablut.client.TablutClient;
-import it.unibo.ai.didattica.competition.tablut.client.TablutRandomClient;
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.StateTablut;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 
-public class TablutAlmaZenecaClient extends TablutClient {
+public class TablutAlmaZenecaClient extends TablutClient {	
+
+	    private int game;
+	    private boolean debug;
+
+	    public TablutAlmaZenecaClient(String player, String name, int timeout, String ipAddress, int game, boolean debug) throws UnknownHostException, IOException {
+	        super(player, name, timeout, ipAddress);
+	        this.game = game;
+	        this.debug = debug;
+	    }
+
+	    public static void main(String[] args) throws IOException {
+	        int gameType = 4;
+	        String role = "";
+	        String name = "brAInmates";
+	        String ipAddress = "localhost";
+	        int timeout = 60;
+	        boolean debug = false;
+
+	        if (args.length < 1) {
+	            System.out.println("You must specify which player you are (WHITE or BLACK)");
+	            System.out.println("USAGE: ./runmyplayer <black|white> <timeout-in-seconds> <server-ip> <debug>");
+	            System.exit(-1);
+	        } else {
+	            role = (args[0]);
+	        }
+	        if (args.length == 2) {
+	            try {
+	                timeout = Integer.parseInt(args[1]);
+	            } catch (NumberFormatException e){
+	                System.out.println("Timeout must be an integer representing seconds");
+	                System.out.println("USAGE: ./runmyplayer <black|white> <timeout-in-seconds> <server-ip> <debug>");
+	                System.exit(-1);
+	            }
+	        }
+	        if (args.length == 3) {
+	            try {
+	                timeout = Integer.parseInt(args[1]);
+	            } catch (NumberFormatException e){
+	                System.out.println("Timeout must be an integer representing seconds");
+	                System.out.println("USAGE: ./runmyplayer <black|white> <timeout-in-seconds> <server-ip> <debug>");
+	                System.exit(-1);
+	            }
+	            ipAddress = args[2];
+	        }
+
+	        if (args.length == 4) {
+	            try {
+	                timeout = Integer.parseInt(args[1]);
+	            } catch (NumberFormatException e){
+	                System.out.println("Timeout must be an integer representing seconds");
+	                System.out.println("USAGE: ./runmyplayer <black|white> <timeout-in-seconds> <server-ip> <debug>");
+	                System.exit(-1);
+	            }
+	            ipAddress = args[2];
+	            if(args[3].equals("debug")) {
+	                debug = true;
+	            } else {
+	                System.out.println("The last argument can be only 'debug' and it allow to print logs during search");
+	                System.out.println("USAGE: ./runmyplayer <black|white> <timeout-in-seconds> <server-ip> <debug>");
+	                System.exit(-1);
+	            }
+	        }
+
+	        TablutAlmaZenecaClient client = new TablutAlmaZenecaClient(role, name, timeout, ipAddress, gameType, debug);
+	        client.run();
+	    }
+
+	    @Override
+	    public void run() {
+
+	        // send name of your group to the server saved in variable "name"
+	        try {
+	            this.declareName();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+
+	        // set type of state and WHITE must do the first player
+	        State state = new StateTablut();
+	        state.setTurn(State.Turn.WHITE);
+
+	        // set type of game
+	        GameAshtonTablut tablutGame = new GameAshtonTablut(0, -1, "logs", "white_ai", "black_ai");
+
+
+	        // attributes depends to parameters passed to main
+	        System.out.println("Player: " + (this.getPlayer().equals(State.Turn.BLACK) ? "BLACK" : "WHITE" ));
+	        System.out.println("Timeout: " + this.timeout +" s");
+	        System.out.println("Server: " + this.serverIp);
+	        System.out.println("Debug mode: " + this.debug+"\n");
+
+
+	        // still alive until you are playing
+	        while (true) {
+
+	            // update the current state from the server
+	            try {
+	                this.read();
+	            } catch (ClassNotFoundException | IOException e1) {
+	                e1.printStackTrace();
+	                System.exit(1);
+	            }
+
+	            // print current state
+	            System.out.println("Current state:");
+	            state = this.getCurrentState();
+	            System.out.println(state.toString());
+
+
+
+	            // if i'm WHITE
+	            if (this.getPlayer().equals(State.Turn.WHITE)) {
+
+	                // if is my turn (WHITE)
+	                if (state.getTurn().equals(StateTablut.Turn.WHITE)) {
+
+	                    System.out.println("\nSearching a suitable move... ");
+
+	                    // search the best move in search tree
+	                    Action a = findBestMove(tablutGame, state);
+
+	                    System.out.println("\nAction selected: " + a.toString());
+	                    try {
+	                        this.write(a);
+	                    } catch (ClassNotFoundException | IOException e) {
+	                        e.printStackTrace();
+	                    }
+
+	                }
+
+	                // if is turn of oppenent (BLACK)
+	                else if (state.getTurn().equals(StateTablut.Turn.BLACK)) {
+	                    System.out.println("Waiting for your opponent move...\n");
+	                }
+	                // if I WIN
+	                else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
+	                    System.out.println("YOU WIN!");
+	                    System.exit(0);
+	                }
+	                // if I LOSE
+	                else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
+	                    System.out.println("YOU LOSE!");
+	                    System.exit(0);
+	                }
+	                // if DRAW
+	                else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
+	                    System.out.println("DRAW!");
+	                    System.exit(0);
+	                }
+
+	            }
+	            // if i'm BLACK
+	            else {
+
+	                // if is my turn (BLACK)
+	                if (this.getCurrentState().getTurn().equals(StateTablut.Turn.BLACK)) {
+
+	                    System.out.println("\nSearching a suitable move... ");
+
+	                    // search the best move in search tree
+	                    Action a = findBestMove(tablutGame, state);
+
+	                    System.out.println("\nAction selected: " + a.toString());
+	                    try {
+	                        this.write(a);
+	                    } catch (ClassNotFoundException | IOException e) {
+	                        e.printStackTrace();
+	                    }
+
+	                }
+
+	                // if is turn of oppenent (WHITE)
+	                else if (state.getTurn().equals(StateTablut.Turn.WHITE)) {
+	                    System.out.println("Waiting for your opponent move...\n");
+	                }
+
+	                // if I LOSE
+	                else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
+	                    System.out.println("YOU LOSE!");
+	                    System.exit(0);
+	                }
+
+	                // if I WIN
+	                else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
+	                    System.out.println("YOU WIN!");
+	                    System.exit(0);
+	                }
+
+	                // if DRAW
+	                else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
+	                    System.out.println("DRAW!");
+	                    System.exit(0);
+	                }
+	            }
+	        }
+	    }
+
+
+	    /**
+	     * Method that find a suitable moves searching in game tree
+	     * @param tablutGame Current game
+	     * @param state Current state
+	     * @return Action that is been evaluated as best
+	     */
+	    private Action findBestMove(GameAshtonTablut tablutGame, State state) {
+
+	        MyIterativeDeepeningAlphaBetaSearch search = new MyIterativeDeepeningAlphaBetaSearch(tablutGame, Double.MIN_VALUE, Double.MAX_VALUE, this.timeout - 2 );
+	        search.setLogEnabled(debug);
+	        return search.makeDecision(state);
+	    }
 	
-    private boolean debug;
-
-	public TablutAlmaZenecaClient(String player, String name, int timeout, String ipAddress)
-			throws UnknownHostException, IOException {
-		super(player, name, timeout, ipAddress);
-
-	}
-
-	public static void main(String[] args) throws UnknownHostException, IOException, ClassNotFoundException {
-		int gametype = 4;
-		String role = "";
-		String name = "AlmaZeneca";
-		String ipAddress = "localhost";
-		int timeout = 60;
-
-		if (args.length < 1) {
-			System.out.println("You must specify which player you are (WHITE or BLACK)");
-			System.exit(-1);
-		} else {
-			System.out.println(args[0]);
-			role = (args[0]);
-		}
-		if (args.length == 2) {
-			System.out.println(args[1]);
-			timeout = Integer.parseInt(args[1]);
-		}
-		if (args.length == 3) {
-			timeout = Integer.parseInt(args[1]);
-			ipAddress = args[2];
-		}
-		System.out.println("Selected client: " + args[0]);
-
-		TablutRandomClient client = new TablutRandomClient(role, name, gametype, timeout, ipAddress);
-		client.run();
-	}
-
-	@Override
-	public void run() {
-		try {
-			this.declareName();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		// set state type and the white player as first
-		State state = new StateTablut();
-		state.setTurn(State.Turn.WHITE);
-
-		// set game type
-		GameAshtonTablut tablutGame = new GameAshtonTablut(0, -1, "logs", "white_ai", "black_ai");
-
-		List<int[]> pawns = new ArrayList<int[]>();
-		List<int[]> empty = new ArrayList<int[]>();
-
-		System.out.println("You are player " + this.getPlayer().toString() + "!");
-
-		if (this.getPlayer().equals(State.Turn.WHITE)) {
-			executeClient(state, Turn.WHITE, Turn.BLACK, tablutGame);
-		} else if (this.getPlayer().equals(State.Turn.BLACK)) {
-			executeClient(state, Turn.BLACK, Turn.WHITE, tablutGame);
-		}
-	}
-
-	private void executeClient(State state, Turn myTurn, Turn opponentTurn, GameAshtonTablut tablutGame) {
-		while (true) {
-			// update the current state from the server
-			try {
-				this.read();
-			} catch (ClassNotFoundException | IOException e1) {
-				System.out.println("Error during the reading of the state");
-				e1.printStackTrace();
-				System.exit(1);
-			}
-			
-			// show the current state
-			System.out.println("Current state:");
-			state = this.getCurrentState();
-			System.out.println(state.toString());
-
-			// if is my turn
-			if (state.getTurn().equals(myTurn)) {
-				System.out.println("\nSearching a suitable move... ");
-
-				// find the best move searching in the solution tree
-				Action a = findBestMove(tablutGame, state);
-
-				System.out.println("\nAction selected: " + a.toString());
-				try {
-					this.write(a);
-				} catch (ClassNotFoundException | IOException e) {
-					e.printStackTrace();
-				}
-			}
-
-			// if is the opponent turn
-			else if (state.getTurn().equals(opponentTurn)) {
-				System.out.println("Waiting for your opponent move...\n");
-			}
-			// if I win
-			else if (state.getTurn().equals(StateTablut.Turn.WHITEWIN)) {
-				System.out.println("You won the game !");
-				System.exit(0);
-			}
-			// if I lose
-			else if (state.getTurn().equals(StateTablut.Turn.BLACKWIN)) {
-				System.out.println("You lost the game !");
-				System.exit(0);
-			}
-			// if it's draw
-			else if (state.getTurn().equals(StateTablut.Turn.DRAW)) {
-				System.out.println("It's draw !");
-				System.exit(0);
-			}
-		}
-	}
-
-	public Action findBestMove(GameAshtonTablut tablutGame, State state) {
-		MyIterativeDeepeningAlphaBetaSearch search = new MyIterativeDeepeningAlphaBetaSearch(tablutGame, Double.MIN_VALUE, Double.MAX_VALUE, this.timeout - 2 );
-        search.setLogEnabled(debug);
-        return search.makeDecision(state);
-	}
-
 }
