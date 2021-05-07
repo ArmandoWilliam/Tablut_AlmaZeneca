@@ -45,7 +45,7 @@ public class WhiteHeuristics implements Heuristics {
 
 	private List<String> blackBarrier;
 	
-	public WhiteHeuristic() {
+	public WhiteHeuristics(State state) {
 		this.pawnsB = 16;
 		this.pawnsW = 9;
 		this.r = new Random(System.currentTimeMillis());
@@ -396,6 +396,7 @@ public class WhiteHeuristics implements Heuristics {
 							if (minacciato) {
 								kingOverhanged++;
 							}
+					
 							
 						
 					
@@ -419,6 +420,11 @@ public class WhiteHeuristics implements Heuristics {
 			this.kingOnFavourite = 0;
 			this.guards = 0;
 
+		}
+		@Override
+		public double evaluateState() {
+			// TODO Auto-generated method stub
+			return 0;
 		}
 
 }

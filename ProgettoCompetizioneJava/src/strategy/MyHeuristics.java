@@ -21,4 +21,9 @@ public class MyHeuristics implements Heuristics {
 		return result;
 		
 	}
+	@Override
+	public double evaluateState() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }

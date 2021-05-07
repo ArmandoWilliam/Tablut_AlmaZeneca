@@ -201,7 +201,7 @@ public class AlmaZenecaClient extends TablutClient {
     private Action findBestMove(GameAshtonTablut tablutGame, State state) {
 
         MyIterativeDeepeningAlphaBetaSearch search = new MyIterativeDeepeningAlphaBetaSearch(tablutGame, Double.MIN_VALUE, Double.MAX_VALUE, this.timeout - 2 );
-        search.setLogEnabled(debug);
+        //search.setLogEnabled(debug);
         return search.makeDecision(state);
     }
 	
