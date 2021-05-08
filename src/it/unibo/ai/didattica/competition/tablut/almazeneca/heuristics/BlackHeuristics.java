@@ -220,6 +220,8 @@ public class BlackHeuristics extends Heuristics{
 	
 	//vero se la posizione indicata e raggiongibile da una pedina nera (non scavalca pedine bianche)
 	public boolean positionReachable(int x, int y) {
+		if (isCitadel(x,y))
+			return false;
 		//guardo a destra
 		for (int i=x; i<this.board.length; i++)
 			if (!this.board[i][y].equals(State.Pawn.EMPTY))
@@ -275,8 +277,8 @@ public class BlackHeuristics extends Heuristics{
 		//structure that represent citadels squares
 		final int[][] citadels= {
 				
-									{0, 4}, {0, 5}, {0, 6}, 
-											{1, 5}, 
+									{0, 3}, {0, 4}, {0, 5}, 
+											{1, 4}, 
 											 						
 					{3, 0},											{3, 8}, 
 					{4, 0}, {4, 1},							{4, 7}, {4, 8}, 
