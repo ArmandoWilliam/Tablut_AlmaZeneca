@@ -48,7 +48,7 @@ public class TablutAlmaZenecaClient extends TablutClient {
 		}
 		System.out.println("Selected client: " + args[0]);
 
-		TablutRandomClient client = new TablutRandomClient(role, name, gametype, timeout, ipAddress);
+		TablutAlmaZenecaClient client = new TablutAlmaZenecaClient(role, name, timeout, ipAddress);
 		client.run();
 	}
 
@@ -134,7 +134,7 @@ public class TablutAlmaZenecaClient extends TablutClient {
 
 	public Action findBestMove(GameAshtonTablut tablutGame, State state) {
 		MyIterativeDeepeningAlphaBetaSearch search = new MyIterativeDeepeningAlphaBetaSearch(tablutGame, Double.MIN_VALUE, Double.MAX_VALUE, this.timeout - 2 );
-        search.setLogEnabled(debug);
+        //search.setLogEnabled(debug);
         return search.makeDecision(state);
 	}
 

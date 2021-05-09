@@ -13,6 +13,7 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.BlackHeuristics;
 import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.Heuristics;
+import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.WhiteHeuristics;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
 import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.BlackHeuristics;
 import it.unibo.ai.didattica.competition.tablut.almazeneca.heuristics.Heuristics;
@@ -1276,7 +1277,7 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 			// if it isn't a terminal state
 			Heuristics heuristics = null;
 			if (turn.equals(State.Turn.WHITE)) {
-//				heuristics = new WhiteHeuristics(state);
+				heuristics = new WhiteHeuristics(state);
 			} else {
 				heuristics = new BlackHeuristics(state);
 			}
@@ -1296,14 +1297,13 @@ public class GameAshtonTablut implements Game, Cloneable, aima.core.search.adver
 		}
 
 		@Override
-		public Turn getPlayer(State arg0) {
-			// TODO Auto-generated method stub
-			return null;
+		public State.Turn getPlayer(State state) {
+			return state.getTurn();
 		}
 
 		@Override
-		public Turn[] getPlayers() {
-			// TODO Auto-generated method stub
-			return null;
+		public State.Turn[] getPlayers() {
+			return new State.Turn[0];
 		}
+
 }
