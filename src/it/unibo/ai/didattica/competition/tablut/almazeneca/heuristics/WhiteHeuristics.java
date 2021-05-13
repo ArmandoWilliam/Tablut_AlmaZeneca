@@ -6,6 +6,7 @@ import java.util.Random;
 
 import it.unibo.ai.didattica.competition.tablut.domain.State;
 import it.unibo.ai.didattica.competition.tablut.domain.State.Turn;
+
 public class WhiteHeuristics extends Heuristics {	
 
 	private int countB;
@@ -23,9 +24,11 @@ public class WhiteHeuristics extends Heuristics {
 	private int kingOnFavourite;
 	private int guards;
 	private int strategy;
+	private State.Pawn[][] board;
+	private int[] kingPosition;
 	
 	//pesi 
-	private double WHITE_WEIGHT_COUNT_WHITE_PAWNS= 7.0;
+	/*private double WHITE_WEIGHT_COUNT_WHITE_PAWNS= 7.0;
 	private double WHITE_WEIGHT_COUNT_BLACK_PAWNS= 5.0;
 	private double WHITE_WEIGHT_SINGLE_FREE_WAY_KING= 8.0;
 	private double WHITE_WEIGHT_MULTIPLE_FREE_WAY_KING=12.0;
@@ -33,8 +36,24 @@ public class WhiteHeuristics extends Heuristics {
 	private double WHITE_WEIGHT_KING_ON_BLUE= 15.0;
 	private double WHITE_WEIGHT_STRATEGY = 7.0;
 	private double WHITE_WEIGHT_KING_ON_THRONE = 4.0;
+	private double WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED = 3.0; 
+	private double WHITE_WEIGHT_WHITE_PAWNS_OVERHANGED = 1.5;
+	private double WHITE_WEIGHT_KING_FAVOURITE = 5.0; */
 	private int pawnsB;
 	private int pawnsW;
+	
+	private  double capturedBlack = 1.0;
+	private  double capturedWhite = -1.0;
+	private  double protectedKingOneSide = 8.0;
+	private  double protectedKingTwoSide = 6.0;
+	private  double protectedKingThreeSide = -10.0; 
+	private  double protectedKingFourSide = -15.0;
+	private  double distanceEscapePoint = 5.0; 
+	private  double rowColumnFree = 800.0;
+	private  double kingCaptured = -2500.0;
+	private  double win = 2000.0;
+	private  double kingInCastle = -200.0;
+	private double freeWays=500.0;
 
 	private Random r;
 	private List<String> citadels;
@@ -73,14 +92,14 @@ public class WhiteHeuristics extends Heuristics {
 		
 		//extractValues 
 		this.extractValues(state);
-		
+		printValues();
 		//calcolo euristica
 		double result= 0;
 		
-		//controllo se il vincitore è il nero
+		//controllo se il vincitore è il nero re catturato 
 		if (state.getTurn().equalsTurn(Turn.BLACKWIN.toString())) {
-			return Double.NEGATIVE_INFINITY; //valore -infinito?
-		}
+			return -50; //valore -infinito?
+		}/*
 		//re inesperto  
 				if(this.kingOverhanged>0) {
 					result -= WHITE_WEIGHT_KING_OVERHANGED * this.kingOverhanged;
@@ -89,32 +108,170 @@ public class WhiteHeuristics extends Heuristics {
 						result += WHITE_WEIGHT_SINGLE_FREE_WAY_KING * this.kingFreeWay;
 					} else {
 						if (this.kingFreeWay > 1) {
-							result += WHITE_WEIGHT_MULTIPLE_FREE_WAY_KING * (this.kingFreeWay);
+							result += WHITE_WEIGHT_MULTIPLE_FREE_WAY_KING * (this.kingFreeWay/ 2.0);
 						}
 					}
 				}
-		
+		*/
+		/*
 		result -= WHITE_WEIGHT_KING_ON_THRONE * this.kingOnThrone;
 		result += WHITE_WEIGHT_KING_ON_BLUE * this.kingOnStar;
+		result += WHITE_WEIGHT_BLACK_PAWNS_OVERHANGED * this.blackPawnsOverhanged;
 
+		result += WHITE_WEIGHT_KING_ON_BLUE * this.kingOnStar;
+
+		result += WHITE_WEIGHT_KING_FAVOURITE * this.kingOnFavourite;
+*/
 		//peso delle pedine nere
-		if(this.countB< this.pawnsB) {
-			result+= this.WHITE_WEIGHT_COUNT_BLACK_PAWNS*(this.pawnsB-this.countB);
-		}
+		/*if(this.countB< this.pawnsB) {
+			result+= this.WHITE_WEIGHT_COUNT_BLACK_PAWNS*(this.pawnsB-this.countB)/this.pawnsB;
+		}*/
 		//peso delle pedine bianche
-		if(this.countW< this.pawnsW) {
+		/*if(this.countW< this.pawnsW) {
 			//sottraggo il peso?
 		
-			result -= WHITE_WEIGHT_COUNT_WHITE_PAWNS * (this.pawnsW - this.countW);
+			result -= WHITE_WEIGHT_COUNT_WHITE_PAWNS * (this.pawnsW - this.countW)/this.pawnsW;
 		}
 		
+		*/
+
+		double valCapturedBlack= this.pawnsB-this.countB;
+		double valCapturedWhite= this.pawnsW-this.countW;
+		double valKingProtected = 0;
+		
+		if(this.whiteNearKing==1) {
+			valKingProtected = protectedKingOneSide;
+		}else if(this.whiteNearKing==2) {
+			valKingProtected = protectedKingTwoSide;
+		}else if(this.whiteNearKing==3) {
+			valKingProtected = protectedKingThreeSide;
+		}else if(this.whiteNearKing==4) {
+			valKingProtected = protectedKingFourSide;
+		}
+		
+		//double valEscapePointBlocked= 
+		double valKingInCastle=0.0;
+		
+		double valKingFreeWays=this.kingFreeWay*freeWays;
+		result= result+ valKingProtected+valKingFreeWays+valKingInCastle+ valCapturedBlack*this.capturedBlack+ valCapturedWhite-this.capturedWhite;
 		
 		return result;
 	}
-	
-	
-	private void extractValues(State state) {
+	public boolean kingIsNearThrone(){
+		//structure that represent the squares near the throne
+		final int [][] nearThrone= {	
+				
+										{3, 4},
+								{4, 3}, {4, 4}, {4, 5},
+										{5, 4}
+		};
+		
+		for (int pos[] : nearThrone) {
+			if(this.kingPosition[0]==pos[0] && this.kingPosition[1]==pos[1] )
+				return true;
+		}
+		return false;
+	}
 
+	 /*
+	 * This method returns a boolean that express if a specific square is inside one of the citadel
+	 */
+	public boolean isCitadel(int x, int y) {
+		//structure that represent citadels squares
+		final int[][] citadels= {
+				
+									{0, 3}, {0, 4}, {0, 5}, 
+											{1, 4}, 
+											 						
+					{3, 0},											{3, 8}, 
+					{4, 0}, {4, 1},							{4, 7}, {4, 8}, 
+					{5, 0},											{5, 8}, 
+											{7, 4},
+									{8, 5}, {8, 4}, {8, 3}   
+									
+		};
+
+		
+		for (int cit[] : citadels)
+			if (x==cit[0] && y==cit[1])
+				return true;
+		return false;
+	
+	}
+	
+public boolean kingHasOpenWays() {
+		
+		//check if the king is near the throne
+		if (this.kingIsNearThrone())
+			return false;
+		
+		int colonna=this.kingPosition[0];
+		int riga= this.kingPosition[1];
+		
+
+		//controllo a destra
+		for (int i=colonna; i<this.board[colonna].length; i++)
+			if (!this.board[colonna][i].equals(State.Pawn.EMPTY) ||  isCitadel(colonna, i))
+				return false;
+		//controllo a sinistra
+		for (int i=colonna; i>=0; i--)
+			if (!this.board[colonna][i].equals(State.Pawn.EMPTY) || isCitadel(colonna, i))
+				return false;
+		//controllo sopra		
+		for (int i=riga; i<board[colonna].length; i++)
+			if (!this.board[riga][i].equals(State.Pawn.EMPTY) || isCitadel(riga, i))
+				return false;
+		//controllo sotto
+		for (int i=riga; i>=0; i--)
+			if (!this.board[riga][i].equals(State.Pawn.EMPTY) || isCitadel(riga, i))
+				return false;
+		
+		return true;
+	}
+	//posizione del re
+	
+			public int[] getKingPosition() {
+				this.board=this.state.getBoard();
+				int[] kingPosition = {4, 4};
+				
+				for(int i=0; i<this.board[0].length; i++) {
+					for(int j=0; j<this.board[0].length; j++) {
+						if(this.board[i][j].equals(State.Pawn.KING)) {
+							kingPosition[0]=i;
+							kingPosition[1]=j;
+							return kingPosition;
+						}
+					}
+				}
+				return kingPosition;
+			}
+			
+		/*	public int distanceBetweenKingEscape(int[] king) {
+				int dist = 0;
+				int distance[] = new int[this.stars.size()];*/
+			/*	this.stars.forEach((position) -> {
+					distance[escapePoints.indexOf(position)] = (Math.abs(king[0]-position.getRow())) + (Math.abs(king.getColumn() - position.getColumn()));
+				});*/
+			/*	int i=0;
+				for(i=0;i<this.stars.size();i++) {
+					distance[]
+				}
+				dist = distance[0];
+				escape = escapePoints.get(0);
+				for( i = 1; i < distance.length; i++) {
+					if(distance[i] < dist) {
+						dist = distance[i];
+						escape = escapePoints.get(i);
+					}
+				}
+				return dist;
+			}
+			
+	*/		
+	private void extractValues(State state) {
+		
+		
+		
 		//calcolo della strategia
 		for (int i = 0; i < state.getBoard().length; i++) {
 			for (int j = 0; j < state.getBoard().length; j++) {
@@ -408,6 +565,8 @@ public class WhiteHeuristics extends Heuristics {
 						
 	}
 	
+		
+	
 		private void resetValues() {
 			this.countB = 0;
 			this.countW = 0;
@@ -423,6 +582,28 @@ public class WhiteHeuristics extends Heuristics {
 			this.kingOverhanged = 0;
 			this.kingOnFavourite = 0;
 			this.guards = 0;
+
+		}
+		
+		private void printValues() {
+
+			double diff = countB - countW;
+
+			System.out.println("countB - countW = " + diff);
+			System.out.println("countB = " + this.countB);
+			System.out.println("countW = " + this.countW);
+			System.out.println("blackNearKing = " + this.blackNearKing);
+			System.out.println("whiteNearKing = " + this.whiteNearKing);
+			System.out.println("kingFreeWay = " + this.kingFreeWay);
+			System.out.println("kingOnThrone = " + this.kingOnThrone);
+			System.out.println("kingNearThrone = " + this.kingNearThrone);
+			System.out.println("kingOnStar = " + this.kingOnStar);
+			System.out.println("kingFromBorder = " + this.kingFromBorder);
+			System.out.println("blackPawnsOverhanged = " + this.blackPawnsOverhanged);
+			System.out.println("whitePawnsOverhanged = " + this.whitePawnsOverhanged);
+			System.out.println("kingOverhanged = " + this.kingOverhanged);
+			System.out.println("strategy = " + this.strategy);
+			
 
 		}
 
