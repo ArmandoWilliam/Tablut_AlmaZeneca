@@ -86,13 +86,14 @@ public class WhiteHeuristics extends Heuristics {
 	}
 	@Override
 	public double evaluateState() {
-		// TODO Auto-generated method stub
+		
 		//inizializza&resetta
 		this.resetValues();
 		
 		//extractValues 
 		this.extractValues(state);
 		printValues();
+		
 		//calcolo euristica
 		double result= 0;
 		
@@ -150,10 +151,24 @@ public class WhiteHeuristics extends Heuristics {
 		}
 		
 		//double valEscapePointBlocked= 
-		double valKingInCastle=0.0;
+		//double valKingInCastle=0.0;
 		
-		double valKingFreeWays=this.kingFreeWay*freeWays;
-		result= result+ valKingProtected+valKingFreeWays+valKingInCastle+ valCapturedBlack*this.capturedBlack+ valCapturedWhite-this.capturedWhite;
+		double valKingFreeWays=this.kingFreeWay*freeWays;		
+		
+		//result= result+ valKingProtected+valKingFreeWays+valKingInCastle+ valCapturedBlack*this.capturedBlack+ valCapturedWhite-this.capturedWhite;
+		
+		final int kingInCastle = -200;		
+		
+		int valKingInCastle=0;
+		if(kingOnThrone==1)
+			valKingInCastle=1;
+		else
+			valKingInCastle=-1;
+		
+		
+		result = kingInCastle*valKingInCastle+capturedBlack*valCapturedBlack+capturedWhite*valCapturedWhite+valKingProtected+
+				kingFreeWay*rowColumnFree+kingCaptured*kingOverhanged+win*kingOnStar;
+		
 		
 		return result;
 	}
@@ -522,6 +537,7 @@ public boolean kingHasOpenWays() {
 				
 		// controllo se il re è minacciato
 					if (state.getPawn(i, j).equalsPawn(State.Pawn.KING.toString())) {
+						
 						// ho una nera sotto e controllo sopra-destra-sinistra
 						if (i + 1 < state.getBoard().length - 1
 								&& (state.getPawn(i + 1, j).equalsPawn(State.Pawn.BLACK.toString())
@@ -555,7 +571,111 @@ public boolean kingHasOpenWays() {
 								kingOverhanged++;
 							}
 							
+						}						
+						
+						// ho una nera sopra e controllo sotto-destra-sinistra
+						if (i - 1 < state.getBoard().length - 1
+								&& (state.getPawn(i - 1, j).equalsPawn(State.Pawn.BLACK.toString())
+										|| citadels.contains(state.getBox(i - 1, j)))) {						
+							boolean minacciato = false;
+							for (int itemp = i + 1; itemp < state.getBoard().length - 1 && !minacciato; itemp++) {
+								if (state.getPawn(itemp, j).equalsPawn(State.Pawn.BLACK.toString()))
+									minacciato = true;
+								if (state.getPawn(itemp, j).equalsPawn(State.Pawn.THRONE.toString())
+										|| citadels.contains(state.getBox(itemp, j))
+										|| state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
+									break;
+							}							
+							for (int jtemp = j - 1; jtemp >= 0 && !minacciato; jtemp--) {
+								if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
+									minacciato = true;
+								if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
+										|| citadels.contains(state.getBox(i - 1, jtemp))
+										|| state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
+									break;
+							}
+							for (int jtemp = j + 1; jtemp < state.getBoard().length - 1 && !minacciato; jtemp++) {
+								if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
+									minacciato = true;
+								if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
+										|| citadels.contains(state.getBox(i - 1, jtemp))
+										|| state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
+									break;
+							}
+							if (minacciato) {
+								kingOverhanged++;
+							}
+							
 						}
+						// ho una nera a destra e controllo sotto-sopra-sinistra
+						if (j + 1 < state.getBoard().length - 1
+								&& (state.getPawn(i, j + 1).equalsPawn(State.Pawn.BLACK.toString())
+										|| citadels.contains(state.getBox(i, j + 1)))) {
+							boolean minacciato = false;
+							for (int itemp = i - 1; itemp >= 0 && !minacciato; itemp--) {
+								if (state.getPawn(itemp, j).equalsPawn(State.Pawn.BLACK.toString()))
+									minacciato = true;
+								if (state.getPawn(itemp, j).equalsPawn(State.Pawn.THRONE.toString())
+										|| citadels.contains(state.getBox(itemp, j))
+										|| state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
+									break;
+							}
+							for (int itemp = i + 1; itemp < state.getBoard().length - 1 && !minacciato; itemp++) {
+								if (state.getPawn(itemp, j).equalsPawn(State.Pawn.BLACK.toString()))
+									minacciato = true;
+								if (state.getPawn(itemp, j).equalsPawn(State.Pawn.THRONE.toString())
+										|| citadels.contains(state.getBox(itemp, j))
+										|| state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
+									break;
+							}
+							for (int jtemp = j - 1; jtemp >= 0 && !minacciato; jtemp--) {
+								if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
+									minacciato = true;
+								if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
+										|| citadels.contains(state.getBox(i - 1, jtemp))
+										|| state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
+									break;
+							}							
+							if (minacciato) {
+								kingOverhanged++;
+							}							
+						}
+						
+						// ho una nera a sinistra e controllo sotto-sopra-destra
+						if (j - 1 < state.getBoard().length - 1
+								&& (state.getPawn(i, j - 1).equalsPawn(State.Pawn.BLACK.toString())
+										|| citadels.contains(state.getBox(i, j - 1)))) {
+							boolean minacciato = false;
+							
+							for (int itemp = i - 1; itemp >= 0 && !minacciato; itemp--) {
+								if (state.getPawn(itemp, j).equalsPawn(State.Pawn.BLACK.toString()))
+									minacciato = true;
+								if (state.getPawn(itemp, j).equalsPawn(State.Pawn.THRONE.toString())
+										|| citadels.contains(state.getBox(itemp, j))
+										|| state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
+									break;
+							}
+							for (int itemp = i + 1; itemp < state.getBoard().length - 1 && !minacciato; itemp++) {
+								if (state.getPawn(itemp, j).equalsPawn(State.Pawn.BLACK.toString()))
+									minacciato = true;
+								if (state.getPawn(itemp, j).equalsPawn(State.Pawn.THRONE.toString())
+										|| citadels.contains(state.getBox(itemp, j))
+										|| state.getPawn(itemp, j).equalsPawn(State.Pawn.WHITE.toString()))
+									break;
+							}
+							for (int jtemp = j + 1; jtemp < state.getBoard().length - 1 && !minacciato; jtemp++) {
+								if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.BLACK.toString()))
+									minacciato = true;
+								if (state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.THRONE.toString())
+										|| citadels.contains(state.getBox(i - 1, jtemp))
+										|| state.getPawn(i - 1, jtemp).equalsPawn(State.Pawn.WHITE.toString()))
+									break;
+							}						
+							if (minacciato) {
+								kingOverhanged++;
+							}							
+						}
+						
 					}
 				}
 			}
