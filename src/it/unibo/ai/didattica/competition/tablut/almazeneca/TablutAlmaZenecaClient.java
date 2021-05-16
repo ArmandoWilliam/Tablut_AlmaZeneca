@@ -46,7 +46,6 @@ public class TablutAlmaZenecaClient extends TablutClient {
 			timeout = Integer.parseInt(args[1]);
 			ipAddress = args[2];
 		}
-		System.out.println("Selected client: " + args[0]);
 
 		TablutAlmaZenecaClient client = new TablutAlmaZenecaClient(role, name, timeout, ipAddress);
 		client.run();
@@ -66,6 +65,42 @@ public class TablutAlmaZenecaClient extends TablutClient {
 
 		// set game type
 		GameAshtonTablut tablutGame = new GameAshtonTablut(0, -1, "logs", "white_ai", "black_ai");
+		
+		System.out.println("\n"+
+                "+---  Ashton Tablut game challenge 2021 ---+");
+         System.out.println(
+        	    "|                                          |\n"+
+                "|     ________________________________     |\n"+
+                "|    |.                |             .|    |\n"+
+                "|    | .               |           .  |    |\n"+
+                "|    |  .              |         .    .    |\n"+
+                "|    |   .             |       .     .|    |\n"+
+                "|    |    .            |     .      . |    |\n"+
+                "|    |     .           |   .       .  |    |\n"+
+                "|    |      .          | .        .   |    |\n"+
+                "|    |       .         .         .    |    |\n"+
+                "|    |.........      . |        .     |    |\n"+
+                "|    |         .   .   |       .      |    |\n"+
+                "|    |          ..     |      .       |    |\n"+
+                "|    |         . .     |     .        |    |\n"+
+                "|    |       .    .    |    .         |    |\n"+
+                "|    |     .       .   |   .          |    |\n"+
+                "|    |   .          .  |  .           |    |\n"+
+                "|    | .             . | .            |    |\n"+
+                "|    |________________.|._____________|    |\n"+
+                "|                                          |\n"+
+                "|                 AlmaZeneca               |\n"+
+                "|                                          |\n");
+
+         System.out.println(
+                "+----------- Armando Botticella -----------+\n"+
+                "+------------ Giuliano De Vizio------------+\n"+
+                "+------------- Andrea Porrazzo ------------+\n"+
+                "+------------- Davide Tazzioli ------------+\n");
+         
+ 		System.out.println("timeout: " + timeout);
+ 		System.out.println("server ip: " + this.serverIp);
+
 
 		List<int[]> pawns = new ArrayList<int[]>();
 		List<int[]> empty = new ArrayList<int[]>();

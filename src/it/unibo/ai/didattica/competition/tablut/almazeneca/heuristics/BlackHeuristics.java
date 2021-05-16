@@ -17,18 +17,10 @@ public class BlackHeuristics extends Heuristics{
 	
 	private static final double WEIGHT_BLACK_PAWN = 15;
 	private static final double WEIGHT_WHITE_PAWN_EATEN = 18;
-	private static final double WEIGHT_PAWN_NEAR_KING = 20;
+	private static final double WEIGHT_PAWN_NEAR_KING = 25;
 	
-
-	//bidimensional array that represent the rhombus strategy
-//	private final int[][] rhombus = {
-//									{1,2}, {1,6},
-//											{2,1}, {2,7},
-//													{6,1}, {6,7},
-//															{7,2}, {7,6}
-//	};
 	
-	private static final double WHEIGHT_OPEN_WAYS =15;
+	private static final double WHEIGHT_OPEN_WAYS =17;
 
 	public BlackHeuristics(State state) {
 		super(state);
@@ -41,25 +33,18 @@ public class BlackHeuristics extends Heuristics{
 		this.board=this.state.getBoard();
 		this.numBlackPawn=state.getNumberOf(Pawn.BLACK);
 		this.numWhitePawn=state.getNumberOf(Pawn.WHITE);
-		
 		this.kingPosition=this.getKingPosition();
-		double bonusEatWhite=1, pawnInDanger=1;
 		
-		
-		
-		double  pawnsNearKing =0;
-		int[] nearPawn=checkNearPawns(State.Pawn.BLACK);
+		double bonusEatWhite=1, pawnInDanger=1, pawnsNearKing =0, openWays=0;
+		int[] nearPawn=checkNearPawns(this.kingPosition, State.Pawn.BLACK);
 		for (int i=0; i<4; i++)
 			if(nearPawn[i]==1)
 				if (goodPosition(i))
-					pawnsNearKing+=0.5;
+					pawnsNearKing++;
 				pawnsNearKing++;
-		
-		
+				
 		int quadrant=kingQuadrant();
 		this.freeWaysOnQuadrant= this.checkOpenWaysOnQuadrant();
-		double openWays=0;
-		
 		if(quadrant!=4) {
 			openWays=freeWaysOnQuadrant[quadrant]/1.5;
 		}else {
@@ -71,9 +56,15 @@ public class BlackHeuristics extends Heuristics{
 		//divento più aggressivo
 		if (this.kingIsprotected()) {
 			openWays=openWays*0.5;
-			bonusEatWhite=0.7;
+			bonusEatWhite=1.3;
 			
 		}
+		
+		if (!kingIsNearThrone()) {
+			openWays=openWays*0.8;
+			bonusEatWhite=1.1;
+		}
+		
 		int[] blackPosition= {-1, -1};
 		
 		for (int i=0; i<this.board[0].length; i++)
@@ -81,35 +72,28 @@ public class BlackHeuristics extends Heuristics{
 				if(this.board[i][j].equals(State.Pawn.BLACK)) {
 					blackPosition[0]=i;
 					blackPosition[1]=j;
-		/*
+		
 					if(isPawnInDanger(blackPosition))
-						pawnInDanger=0.9;	*/
+						pawnInDanger=0.9;	
 				}
 					
 	
-		
 		//evaluation value
 		double result=0;
 		result+=WEIGHT_BLACK_PAWN*this.numBlackPawn/GameAshtonTablut.NUM_BLACK;
 		result+=(bonusEatWhite*WEIGHT_WHITE_PAWN_EATEN*(GameAshtonTablut.NUM_WHITE-this.numWhitePawn)/GameAshtonTablut.NUM_WHITE);
-		
-
-		result+=WEIGHT_PAWN_NEAR_KING*(pawnsNearKing/this.pawnToEatKing());
-
 		result+=WEIGHT_PAWN_NEAR_KING*pawnsNearKing/this.pawnToEatKing();
-		
 		result+=WHEIGHT_OPEN_WAYS*openWays;
-		
 		result=result*pawnInDanger;
 		
 		if (this.kingHasOpenWays())
 			result-=50;
 		
 		if(state.getTurn().equals(State.Turn.WHITEWIN))
-			result-=100;
+			result=Double.NEGATIVE_INFINITY;
 		
 		if(state.getTurn().equals(State.Turn.WHITEWIN))
-			result+=100;
+			result=Double.POSITIVE_INFINITY;
 		
 		return result;
 		
@@ -151,11 +135,10 @@ public class BlackHeuristics extends Heuristics{
 
         
 	public boolean kingIsprotected() {
-		
 		if (this.kingIsNearThrone())
 			return false; 
 		
-		int nearPawns[]=this.checkNearPawns(State.Pawn.WHITE);
+		int nearPawns[]=this.checkNearPawns(this.kingPosition, State.Pawn.WHITE);
 		if ((nearPawns[0]==1 && nearPawns[1]==1)	||
 			(nearPawns[1]==1 && nearPawns[2]==1)	||
 			(nearPawns[2]==1 && nearPawns[3]==1)	||
@@ -173,19 +156,18 @@ public class BlackHeuristics extends Heuristics{
 	 * @param state: the state of the board, position: the specified position we want to analyze, target: the specific pawn type we want to see if it's near the position
 	 *  
 	 */
-	public int[] checkNearPawns(State.Pawn target){
+	public int[] checkNearPawns(int[] pos, State.Pawn target){ //0:sinistra, 1: destra, 2: sopra, 3:sotto
         int count[]= {-1, -1, -1, -1};
-        //GET TURN
-
-        String stringTarget=target.toString();
-        if(this.board[this.kingPosition[0]-1][this.kingPosition[1]].equalsPawn(stringTarget))
+    
+        if(this.board[pos[0]-1][pos[1]].equals(target))
             count[0]=1;
-        if(this.board[this.kingPosition[0]+1][this.kingPosition[1]].equalsPawn(stringTarget))
+        if(this.board[pos[0]+1][pos[1]].equals(target))
             count[1]=1;
-        if(this.board[this.kingPosition[0]][this.kingPosition[1]-1].equalsPawn(stringTarget))
+        if(this.board[pos[0]][pos[1]-1].equals(target))
             count[2]=1;
-        if(this.board[this.kingPosition[0]][this.kingPosition[1]+1].equalsPawn(stringTarget))
+        if(this.board[pos[0]][pos[1]+1].equals(target))
             count[3]=1;
+        
         return count;
     }
 	
@@ -200,7 +182,6 @@ public class BlackHeuristics extends Heuristics{
 	public boolean goodPosition(int pos) {
 		
 		//valido solo quando il re è lontano dal castello
-		
 		if (this.pawnToEatKing()>2)
 			return false;
 		
@@ -411,11 +392,14 @@ public class BlackHeuristics extends Heuristics{
 	 * 
 	 */
 	
-	/*
+	
 	public boolean isPawnInDanger(int[] position) {
 		
-		State.Pawn board[][]=this.state.getBoard();
+		State.Pawn board[][]=this.board;
 		boolean result = false;
+		
+		if (position[0]==0 || position[0]==8 || position[1]==0 || position[1]==8)
+			return false;
 		
 		int colOnTheRight=position[1]+1;
 		int colOnTheLeft=position[1]-1;
@@ -423,6 +407,7 @@ public class BlackHeuristics extends Heuristics{
 		int rowBelow=position[0]-1;
 				
 		//control in the column on the right
+		
 		for (int i=0; i<board.length && !board[position[0]][colOnTheRight].equals(State.Pawn.EMPTY); i++) {
 			if(board[i][colOnTheRight].equals(State.Pawn.WHITE)) {
 				
@@ -551,7 +536,7 @@ public class BlackHeuristics extends Heuristics{
 		
 		return result;
 	}
-*/
+
 	public int kingQuadrant() {
 		if(this.kingPosition[0]<4 && this.kingPosition[1]<4)
 			return 0;
