@@ -7,7 +7,6 @@ import java.util.List;
 
 import it.unibo.ai.didattica.competition.tablut.almazeneca.minmax.MyIterativeDeepeningAlphaBetaSearch;
 import it.unibo.ai.didattica.competition.tablut.client.TablutClient;
-import it.unibo.ai.didattica.competition.tablut.client.TablutRandomClient;
 import it.unibo.ai.didattica.competition.tablut.domain.Action;
 import it.unibo.ai.didattica.competition.tablut.domain.GameAshtonTablut;
 import it.unibo.ai.didattica.competition.tablut.domain.State;
@@ -66,6 +65,41 @@ public class TablutAlmaZenecaClient extends TablutClient {
 
 		// set game type
 		GameAshtonTablut tablutGame = new GameAshtonTablut(0, -1, "logs", "white_ai", "black_ai");
+		
+		System.out.println("\n"+
+                "+---  Ashton Tablut game challenge 2021 ---+");
+         System.out.println(
+        	    "|                                          |\n"+
+                "|     ________________________________     |\n"+
+                "|    |.                |             .|    |\n"+
+                "|    | .               |           .  |    |\n"+
+                "|    |  .              |         .    .    |\n"+
+                "|    |   .             |       .     .|    |\n"+
+                "|    |    .            |     .      . |    |\n"+
+                "|    |     .           |   .       .  |    |\n"+
+                "|    |      .          | .        .   |    |\n"+
+                "|    |       .         .         .    |    |\n"+
+                "|    |.........      . |        .     |    |\n"+
+                "|    |         .   .   |       .      |    |\n"+
+                "|    |          ..     |      .       |    |\n"+
+                "|    |         . .     |     .        |    |\n"+
+                "|    |       .    .    |    .         |    |\n"+
+                "|    |     .       .   |   .          |    |\n"+
+                "|    |   .          .  |  .           |    |\n"+
+                "|    | .             . | .            |    |\n"+
+                "|    |________________.|._____________|    |\n"+
+                "|                                          |\n"+
+                "|                 AlmaZeneca               |\n"+
+                "|                                          |\n");
+
+         System.out.println(
+                "+----------- Armando Botticella -----------+\n"+
+                "+------------ Giuliano De Vizio------------+\n"+
+                "+------------- Andrea Porrazzo ------------+\n"+
+                "+------------- Davide Tazzioli ------------+\n");
+         
+ 		System.out.println("timeout: " + timeout);
+ 		System.out.println("server ip: " + this.serverIp);
 
 		List<int[]> pawns = new ArrayList<int[]>();
 		List<int[]> empty = new ArrayList<int[]>();
@@ -133,7 +167,7 @@ public class TablutAlmaZenecaClient extends TablutClient {
 	}
 
 	public Action findBestMove(GameAshtonTablut tablutGame, State state) {
-		MyIterativeDeepeningAlphaBetaSearch search = new MyIterativeDeepeningAlphaBetaSearch(tablutGame, Double.MIN_VALUE, Double.MAX_VALUE, this.timeout - 2 );
+		MyIterativeDeepeningAlphaBetaSearch search = new MyIterativeDeepeningAlphaBetaSearch(tablutGame, Double.MIN_VALUE, Double.MAX_VALUE, this.timeout - 4 );
         //search.setLogEnabled(debug);
         return search.makeDecision(state);
 	}
